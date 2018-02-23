@@ -1,0 +1,22 @@
+﻿@using TFOF.Areas.Report.Models
+@model List<TFOF.Areas.Report.Models.ReportModel>
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div class="padding-15">
+    @if(Model != null && Model.Count() > 0) { 
+    <ul class="list-group">
+        @foreach (ReportModel report in Model.OrderBy(o => o.Name))
+        {
+            <li class="list-group-item">
+                <a href="@Url.Action("Viewer","Report", new { id = report.Id })" class="font-14" target="Report-@(report.Id)">@(report.Name)</a>
+                <div>@(report.Description)</div>
+            </li>
+        }
+
+    </ul>
+    } else {
+        <h5>There are currently no reports available to you.</h5>
+    }
+</div>

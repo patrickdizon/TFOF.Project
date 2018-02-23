@@ -1,0 +1,16 @@
+﻿using System.Web.Mvc;
+using TFOF.Areas.Core;
+
+namespace TFOF.Areas.[Area]
+{
+    public class [Area]AreaRegistration : CoreAreaRegistration 
+    {
+        public override string AreaName 
+        {
+            get 
+            {
+                return "[Area]";
+            }
+        }
+    }
+}

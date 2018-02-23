@@ -1,0 +1,74 @@
+﻿@using TFOF.Areas.Core.Services
+@using TFOF.Areas.Account.Models
+@using TFOF.Areas.User.Models
+@model RoleEditModel
+
+@{  
+    Breadcrumbs breadcrumbs = new Breadcrumbs(Url);
+    breadcrumbs.AddCrumb("Roles", Url.Action("Index", "Role"));
+    breadcrumbs.AddCrumb("Edit Users");
+    ViewData["Breadcrumbs"] = breadcrumbs;
+
+    ViewBag.Title = Model.Role.Name;
+    ViewBag.LinkNew = Url.Action("Create", "Role");
+    Layout = "~/Views/Shared/_EditLayout.cshtml";
+}
+@Html.ValidationSummary()
+@using (Html.BeginForm())
+{
+    <input type="hidden" name="roleName" value="@Model.Role.Name" />
+    <input type="hidden" name="RoleId" value="@Model.Role.Id" />
+    <div class="padding-sides-15">
+        <div class="row condensed">
+            <div class="col-sm-12 col-md-5 col-lg-5">
+                <div class="mod-header">
+                    Available Users
+                </div>
+                <div class="list-group">
+                @if (Model.NonMembers.Count() == 0)
+                {
+                    <div class="list-group-item">All Users are Members</div>
+                }
+                else
+                {
+                    foreach (ApplicationUser user in Model.NonMembers.OrderBy( l => l.LastName))
+                    {
+                        <label for="@user.Id" onClick="$('form').submit()" class="list-group-item" title="Click to add user">
+                            <i class="fa fa-angle-right pull-right"></i>
+                            <span class="font-normal">@user.FirstName</span> <b>@user.LastName</b>
+                            <span class="font-small font-grey">@user.Email</span>
+                            <input id="@user.Id" type="checkbox" name="IdsToAdd" value="@user.Id" style="display: none"/> 
+                        </label>
+                    }
+                }
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-5 col-lg-5">
+                <div class="mod-header">
+                    Members
+                </div>
+                <div class="list-group">
+                @if (Model.Members.Count() == 0)
+                {
+                    <div class="list-group-item">No Members</div>
+                }
+                else
+                {
+                    foreach (ApplicationUser user in Model.Members.OrderBy(l => l.LastName))
+                    {
+                        <label for="@user.Id" onClick="$('form').submit()" class="list-group-item" title="Click to remove user">
+                            
+                            <span class="pull-right">
+                                <span class="font-normal">@user.FirstName</span> <b>@user.LastName</b>
+                                <span class="font-small font-grey">@user.Email</span>
+                            </span>
+                            <i class="fa fa-angle-left"></i>
+                            <input id="@user.Id" type="checkbox" name="IdsToDelete" value="@user.Id" style="display: none"/> 
+                        </label>
+                    }
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+}

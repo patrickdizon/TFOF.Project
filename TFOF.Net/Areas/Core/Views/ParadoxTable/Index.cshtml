@@ -1,0 +1,84 @@
+
+@{
+	Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<div ng-controller="BasicController" ng-cloak>
+   @Html.Display("SearchForm", "FormSearch")
+
+	<div class="table-wrapper">
+	<table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+		<thead>
+			<tr>
+				<th>
+					No.
+				</th>
+				<th>
+					Table
+				</th>
+				<th>
+					 Sync
+				</th>
+				<th>
+					 Max Threads
+				</th>
+				<th>
+					 Sync Interval (msilliseconds/mins)
+				</th>
+				<th>
+					 Sync On Change
+				</th>
+				<th>
+					 Post Table Create Script
+				</th>
+				<th>
+					 Last Sync
+				</th>
+				<th>
+					 Last Sync Duration
+				</th>
+				<th>
+					 Table Corrupt
+				</th>
+				<th>
+					 Last Error
+				</th>
+
+			</tr>
+		</thead>
+		<tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }" ng-click="selectRow($index);" ng-dblclick="redirect('@Url.Action("Edit","ParadoxTable")/' + a.Id);">
+			<td nowrap>
+				<span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+			</td>
+			<td>
+				<a href="@Url.Action("Edit","ParadoxTable")/{{ a.Id }}">{{ a.Table }}</a> 
+			</td>
+			<td ng-bind-html="a.Sync | check ">
+			</td>
+			<td>
+				{{ a.MaxThreads | number }}
+			</td>
+			<td>
+				{{ a.SyncInterval | number }}/{{ ((a.SyncInterval / 1000) / 60) }}
+			</td>
+			<td ng-bind-html="a.SyncOnChange | check ">
+			</td>
+			<td>
+				{{ a.PostTableCreateScript }}
+			</td>
+			<td>
+				{{ a.LastSync | date : 'short' }}
+			</td>
+			<td>
+				{{ a.LastSyncDuration }}
+			</td>
+			<td ng-bind-html="a.TableCorrupt | check ">
+			</td>
+			<td>
+				{{ a.LastError }}
+			</td>
+
+		</tr>
+	</table>
+	</div>
+</div>

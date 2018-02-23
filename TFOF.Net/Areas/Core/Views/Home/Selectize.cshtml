@@ -1,0 +1,84 @@
+﻿@model TFOF.Areas.Report.Models.ReportModel
+
+@{
+
+    ViewBag.Title = "Selectize Field";
+}
+
+@Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+<h1 class="header-title">@(ViewBag.Title)</h1>
+<form>
+    <div class="row">
+
+        <div class="col-sm-12">
+            A selectize field is a combination of input and search field. It replaces dropdown &lt;select&gt; fields that contains more than 100 options.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <div class="input-field ng-cloak">
+                @Html.EditorFor(model => model.Format, "InputSearch", new { ApiUrl = Url.HttpRouteUrl("ApartmentAPI", new { httproute = "", controller = "Apartment" }), Filters = "ApartmentComplex,Address", Value = "9347", Label = "Deerwood Apts", ValueField = "Id", LabelFields = "ApartmentComplex,-Id,-Address", OrderBy = "ApartmentComplex", Placeholder = "Search by Complex Name or Address", Top = "100", Data = "{\"Address\": \"15640 Bernardo Center Dr\"}" })
+                <label>Apartment Id</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          Razor Example
+<pre>
+<code class="c" data-lang="html">
+///wrap in ng-cloak to prevent initial select tag rendering
+&lt;div class="input-field ng-cloak"&gt;
+@@Html.EditorFor(
+    //the model lambda function
+    model => model.Format, 
+    
+    //The template
+    "InputSearch", 
+    
+    //The View Data
+    new { 
+        //The API endpoint
+        ApiUrl = Url.HttpRouteUrl("ApartmentAPI", new { httproute = "", controller = "Apartment" })
+
+        //The columns to search in
+        , Filters = "ApartmentComplex,Address"
+
+        //The current value
+        , Value = Model.Id
+
+        //The current label
+        , Label = Model.ApartmentComplex
+
+        //Extra information that is required to display in the second line.
+        //In this example its the Address field from the LabelFields property.
+        //This needs to be in JSON format.
+        , Data = "{\"Address\": \"" + Model.Address + "\"}" 
+        
+        //The property to store when changing
+        , ValueField = "Id"
+
+        //The properties to use for the label. 
+        //The '-' places the label in the second line of the option display
+        , LabelFields = "ApartmentComplex,-Id,-Address"
+
+        //The order of the list to be presented
+        , OrderBy = "ApartmentComplex"
+
+        //Placeholder for un-assigned fields
+        , Placeholder = "Search by Complex Name or Address"
+
+        //The number of options to present. A notification will be displayed
+        //when the number of items exceeds this number. It will prompt the 
+        //user to enter more terms in the field to filter down the list.
+        , Top = "100"
+
+        
+    }
+)
+&lt;/div&gt;
+</code></pre>
+            
+        </div>
+    </div>
+</form>

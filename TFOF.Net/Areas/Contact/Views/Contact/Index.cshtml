@@ -1,0 +1,187 @@
+
+@{
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<div ng-controller="BasicController" ng-cloak>
+   @Html.Display("SearchForm", "FormSearch")
+
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+				<th>
+					Company Name
+				</th>
+                <th>
+                    Category
+                </th>
+				<th>
+					Address
+				</th>
+				<th>
+					Main Phone Number
+				</th>
+				<th>
+					Main Fax Number
+				</th>
+				<th>
+					Region
+				</th>
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }" ng-click="selectRow($index); transmit('ContactDetailController', 'basic', a)" onclick="$('.drawer-right').addClass('show')">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td>
+				{{ a.CompanyName }}
+			</td>
+            <td>
+                {{ a.Category }}
+            </td>
+            <td>
+				{{ a.Address }}
+				{{ a.City }}
+			
+				{{ a.State }}
+				{{ a.ZipCode }}
+			</td>
+			<td>			
+				{{ a.MainPhoneNumber }}
+			</td>
+			<td>
+				{{ a.MainFaxNumber }}
+			</td>
+			<td>
+				{{ a.Region }}
+			</td>
+        </tr>
+    </table>
+    </div>
+</div>
+
+<div ng-controller="BasicController" ng-init="init('ContactDetailController')"> 
+	<div class="drawer drawer-right drawer-right-6 side-nav-{{ sideNav }}">
+		<div class="padding-sides-15">
+			<a class="drawer-handle" onclick="$('.drawer-right').removeClass('show')" aria-label="Close"><i class="fa fa-caret-right"></i></a>
+                
+            <div class="label">
+                <a class="btn btn-sm btn-default pull-right" href="@Url.Action("Edit","Contact")/{{ basic.Id }}">Edit</a>
+                {{ basic.Category }}
+            </div>
+            <h5>{{ basic.CompanyName }}</h5>		
+                
+            <div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Account Number</div>
+				<div class="col-sm-8">
+					{{ basic.AccountNumber }}
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Region</div>
+				<div class="col-sm-8">
+					{{ basic.Region }}
+				</div>
+			</div>		
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Address</div>
+				<div class="col-sm-8">
+					<div>{{ basic.Address }}</div>
+					<div>{{ basic.City }} {{ basic.State }} {{ basic.ZipCode }}</div>
+				</div>
+			</div>
+
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Main Phone</div>
+				<div class="col-sm-8">
+					{{ basic.MainPhoneNumber }}
+				</div>
+			</div>
+				
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Main Fax</div>
+				<div class="col-sm-8">
+					{{ basic.MainFaxNumber }}
+				</div>
+			</div>
+
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Billing Address</div>
+				<div class="col-sm-8">
+					<div class="">
+						<div>{{ basic.BillingAddress }}</div>
+						<div>{{ basic.BillingCity }} {{ basic.BillingState }} {{ basic.BillingZipCode }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Website</div>
+				<div class="col-sm-8">
+					{{ basic.Website }}
+				</div>
+			</div>
+
+				
+
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 mod-header font-uppercase" align="right">Staff</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Name</div>
+				<div class="col-sm-8">
+					{{ basic.FirstName }} {{ basic.LastName }}
+				</div>
+			</div>
+
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Phone</div>
+				<div class="col-sm-8">
+					{{ basic.PhoneNumber }} {{ basic.PhoneNumberExtension }}
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Mobile</div>
+				<div class="col-sm-8">
+					{{ basic.MobileNumber }}
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Fax</div>
+				<div class="col-sm-8">
+					{{ basic.FaxNumber}}
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Alternative</div>
+				<div class="col-sm-8">
+					{{ basic.AlternativeNumber}}
+				</div>
+			</div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Email</div>
+				<div class="col-sm-8">
+					{{ basic.Email}}
+				</div>
+			</div>
+            <div class="row padding-bottom-10">
+                <div class="col-sm-4 label font-uppercase" align="right"></div>
+                <div class="col-sm-8">
+                      
+                </div>
+            </div>
+			<div class="row padding-bottom-10">
+				<div class="col-sm-4 label font-uppercase" align="right">Notes</div>
+				<div class="col-sm-8">
+					{{ basic.Notes}}
+				</div>
+			</div>
+				
+
+                
+		</div>
+		</div>
+</div>

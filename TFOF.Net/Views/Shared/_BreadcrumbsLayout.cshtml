@@ -1,0 +1,62 @@
+
+@if (ViewBag.Breadcrumbs != null)
+{
+    <div class="padding-sides-15 padding-top-10">
+        <ol class="breadcrumb">
+            @foreach (var crumb in ViewBag.Breadcrumbs.Crumbs)
+            {
+                <li class="active">
+                    @if (crumb.Link == null)
+                    {
+                        <i class="@(crumb.Icon != null ? crumb.Icon + " font-18":"")"></i>
+                        @Html.Raw(crumb.Label)
+                    }
+                    else
+                    {
+                        if (crumb.Label == null && crumb.Icon == null)
+                        {
+                            <a href="@(crumb.Link)">
+                                ...
+                            </a>
+
+                        }
+                        else
+                        {
+                            <a href="@(crumb.Link)">
+                                <i class="@(crumb.Icon != null ? crumb.Icon + " font-18" : "")"></i>
+                                @Html.Raw(crumb.Label)
+                            </a>
+                        }
+                    }
+                </li>
+            }
+        </ol>
+    </div>
+}
+else if (ViewBag.LinkBackUrl != null)
+{
+    <div class="padding-sides-15 padding-top-10">
+        <ol class="breadcrumb">
+            <li>
+                <a href="@(ViewBag.LinkBackUrl)">
+                    @Html.Raw(ViewBag.LinkBackText)
+                </a>
+            </li>
+
+            @if (ViewBag.Title != null)
+            {
+                <li class="active">@(ViewBag.Title)</li>
+            }
+        </ol>
+    </div>
+} else {
+    if (!Request.Browser.IsMobileDevice)
+    {
+        <div class="padding-10"></div>
+    }
+    else
+    {
+        <div class="padding-5"></div>
+    }
+
+}

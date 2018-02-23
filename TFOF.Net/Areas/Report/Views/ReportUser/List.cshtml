@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Report Users";
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+       
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Report
+                </th>
+                <th>
+                    User
+                </th>
+                <th align="center">
+                    Send Email
+                </th>
+                <th align="center">    
+                    Send Notification
+                </th>
+                <th>
+                    Added
+                </th>
+                
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit","Report")/{{ a.ReportId }}">{{ a.Report.Name }}</a>
+            </td> 
+            <td>
+                {{ a.User.FullName }}
+            </td>
+            <td align="center" ng-bind-html="a.SendEmail | check">
+            </td> 
+            <td align="center" ng-bind-html="a.SendNotification | check">
+            </td>
+            <td> {{ a.Created | date : "medium" }}</td>
+        </tr>
+    </table>
+    </div>
+</div>

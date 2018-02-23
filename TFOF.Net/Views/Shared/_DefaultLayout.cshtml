@@ -1,0 +1,13 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+@RenderBody()
+
+
+@if (IsSectionDefined("scripts"))
+{
+    @section scripts {
+        @RenderSection("scripts", required: false)
+    }
+}

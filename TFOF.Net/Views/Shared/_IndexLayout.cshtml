@@ -1,0 +1,49 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+<div class="row padding-sides-15">
+    <div class="col-sm-6 col-md-7 col-lg-8">
+        <h4 class="header-title">
+        @Html.Raw(ViewBag.Title) 
+        </h4>
+        @if(ViewBag.SubTitle != null) {
+            <h6 class="font-grey">@Html.Raw(ViewBag.SubTitle)</h6>
+        }
+        <div class="btn-toolbar padding-bottom-10">
+            @if (ViewBag.LinkNew != null)
+            {
+                <a href="@(ViewBag.LinkNew)" class="btn btn-sm btn-default ">
+                    <i class="fa fa-plus"></i> New
+                </a>
+            }
+            @if (IsSectionDefined("menu"))
+            {
+                @RenderSection("menu", required: false)
+            }
+            @if(IsSectionDefined("moremenu")) {
+                <div class="btn-group">
+                    <a data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
+                    <i class="fa fa-ellipsis-h"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                    @RenderSection("moremenu", required: false)
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-5 col-lg-4">
+        <div class="pull-right">
+            @if (IsSectionDefined("stats"))
+            {
+                @RenderSection("stats", required: false)
+            }
+        </div>
+    </div>
+</div>
+@RenderBody()
+<div class="padding-50"></div>
+@section scripts {
+    @RenderSection("scripts", required: false)
+}

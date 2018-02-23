@@ -1,0 +1,94 @@
+﻿@model TFOF.Areas.FieldOption.Models.FieldOptionModel
+
+@{
+    ViewBag.Title = "Edit " + Model.Name;
+    ViewBag.Model = Model;
+    Layout = "~/Views/Shared/_EditLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-4">
+         <div class="input-field col-sm-12 ">
+            <h5 class="light">
+                Field Option
+            </h5>
+        </div>
+        @Html.Display("Form", "FormEdit")
+   
+    </div>
+    <div class="col-sm-4">
+        <div class="input-field col-sm-12 ">
+            <h5 class="light">
+                Values
+            </h5>
+        </div>
+        @using (Html.BeginForm("Create", "FieldOptionValue", new { ReturnUrl = "//FieldOption/FieldOption/Edit/" + Model.Id.ToString() }))
+            {
+            <div class="clearfix"></div>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id, new { Id="FieldOptionId", Name="FieldOptionId"})
+            if(Model.FieldOptionValues != null)
+            {   
+            
+                <ol>
+                @foreach(var item in Model.FieldOptionValues.OrderBy(o => o.Position))
+                {
+                    <li><b>@Html.ActionLink(item.Value, "Edit", new { controller = "FieldOptionValue", id = item.Id })</b>
+                        <span class="font-small">
+                            @item.Description
+                        </span>
+                    </li>
+                }
+                </ol>
+            
+            }
+            <div class="input-field col-sm-6 col-md-12 col-lg-12">
+                <input type="hidden" name="IsActive" value="true">
+                <input type="text" name="Value" id="Value" placeholder="Add Value"> 
+                <label>Value</label>
+            </div>
+            <div class="input-field col-sm-6 col-md-12 col-lg-12">
+                <input type="text" name="Description" id="Description" placeholder="Add Description">
+                <label>Description</label>
+            </div>
+            <div class="input-field col-sm-6 col-md-12 col-lg-12">
+                <input type="Submit"  value="Add" class="btn btn-sm btn-primary">
+            </div>
+        }
+    </div>
+        
+    <div class="col-sm-4">
+        <div class="input-field col-sm-12 ">
+            <h5 class="light">
+                Registered Model Fields
+            </h5>
+        </div>
+        @using (Html.BeginForm("Create", "FieldOptionModelField", new { ReturnUrl = "/TFOF//FieldOption/FieldOption/Edit/" + Model.Id.ToString() }))
+        {
+        <div class="clearfix"></div>
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id, new { Id="FieldOptionId", Name="FieldOptionId"})
+        if(Model.FieldOptionModelFields != null) { 
+            <ol>
+            @foreach (var item in Model.FieldOptionModelFields.OrderBy(o => o.ModelField))
+            {
+                <li>
+                    <b>@Html.ActionLink(item.ModelField, "Edit", new { controller = "FieldOptionModelField", id = item.Id })</b> 
+                </li>
+            }
+            </ol>
+        }
+        <div class="input-field col-sm-12 ">
+            <input type="hidden" name="AllowsBlank" value="true">
+            <input type="text" name="ModelField" id="ModelField" placeholder="Add Model.Field">
+            <label>Model.Field</label>
+        </div>
+        <div class="input-field col-sm-6 col-md-12 col-lg-12">
+            <input type="Submit" value="Add" class="btn btn-sm btn-primary">
+        </div>
+        }
+    </div>
+    
+   
+</div>
+

@@ -1,0 +1,175 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Configuration
+@using MvcReportViewer
+@using TFOF.Areas.Core.Helpers
+@{
+    bool isVisibleFooter = ((bool?)ViewBag.FooterInfo == false) ? false : true;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="@Url.Content("~/favicon.ico")" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewBag.Title - TFOF</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,200,300" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    
+    @if (BrowserHelper.IsMobile(Request))
+    {
+        <link href="@Url.Content("~/Content/Site-Mobile.css")" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    }
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body ng-esc-messages>
+<a name="top"></a>
+    <script type="text/javascript">
+    //Captures the TempData Success and Error Messages and displays it using messages.js
+    EXISTING_MESSAGES = {
+                debug: [],
+                success: [],
+                info: [],
+                warning: [],
+                error: []
+            }
+    @{
+        bool messages = false;
+    }
+    @if (TempData["Success"] != null)
+    {
+        @:EXISTING_MESSAGES['success'].push({
+        @:        type: 'success',
+        @:        fadeout: true,
+        @:        message: '@TempData["Success"].ToString()'
+        @:    });
+        messages = true;
+    }
+    @if (TempData["Error"] != null)
+    {
+        @:EXISTING_MESSAGES['error'].push({
+        @:        type: 'error',
+        @:        fadeout: true,
+        @:        message: '@TempData["Error"].ToString()'
+        @:    });
+
+        messages = true;
+    }
+    @if (TempData["Warning"] != null)
+    {
+        @:EXISTING_MESSAGES['warning'].push({
+            @:        type: 'warning',
+        @:        fadeout: true,
+        @:        message: '@TempData["Warning"].ToString()'
+        @:    });
+
+        messages = true;
+    }
+    </script>
+    <div data-ng-controller="MessageController" class="messenger hide" ng-cloak ng-init="@(messages ? "flash()": "")">
+        <div class="container padding-sides-50">
+            <span class="fa-stack float-right closer" ng-click="pinMessages(true)" ng-mouseover="pinHover(true)" ng-mouseout="pinHover(false)">
+                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                <i class="fa fa-thumb-tack fa-stack-1x fa-rotate-90" ng-show="hover.pinned"></i>
+                <i class="fa fa-times fa-stack-1x" ng-show="hover.closer"></i>
+                <span class="fa-stack-1x countdown font-14 font-bold" ng-show="hover.countdown">{{ countdown }}</span>
+            </span>
+            <div data-ng-repeat="(group, class) in groups" class="alert alert-alert {{ class }} font-20 font-bold" ng-show="messages[group].length > 0">
+                <div data-ng-repeat="message in messages[group]" ng-bind-html="message.message"></div>
+            </div>
+        </div>
+    </div>
+    @if(!Globals.ISPRODUCTION)
+    {
+        <a class="environment-alert" data-toggle="popover" title="About Environments"  data-placement="left" data-content="A dev environment is used for testing. A production environment won't have this banner.">Environment: @(Globals.ENVIRONMENT)</a>
+        
+    }
+    @if (!BrowserHelper.IsMobile(Request))
+    {
+    <nav class="navbar navbar-default az-navbar">
+        <ul class="nav navbar-nav">
+            <li class="brand">
+                <a href="@Url.Action("Index","Home", new {area = "Home"})" class="logo">
+                    <div class="header-img"></div>
+                </a>
+            </li>
+            <li>
+                <input class="search" type="search" placeholder="Search customers..." modal="{ id: '#SearchModal'}" onClick="setTimeout(function() {
+                    $('#SearchField').focus();
+                }, 100);">
+                
+            </li>
+        </ul>
+       
+        <ul class="nav navbar-nav navbar-right">
+            <!-- <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">Recent Items <i class="fa fa-angle-down"></i></a>
+                <ul class="dropdown-menu">
+                    <li><a>2</a></li>
+                    <li><a>3</a></li>
+                    <li><a>4</a></li>
+
+                </ul>
+            </li> -->
+
+            @Html.Partial("~/Areas/Account/Views/Shared/_LoginPartial.cshtml")
+        </ul>
+       
+    </nav>
+    }
+    else
+    {
+        @Html.Partial("~/Views/Shared/_NavMobileLayout.cshtml")
+    }
+    <div ng-cloak>
+        @if (!BrowserHelper.IsMobile(Request))
+        {
+            @Html.Partial("~/Views/Shared/_NavSideLayout.cshtml")
+        }
+        <div class="@if (!BrowserHelper.IsMobile(Request)) { @Html.Raw("az-container az-side-nav-{{ sideNav }}") }">
+            @RenderBody()
+                
+            @if (isVisibleFooter)
+            {
+                <div class="padding-15 pull-right font-grey font-10">
+                    @if (ViewBag.ViewRoles != null && ((List<string>)ViewBag.ViewRoles).Count() > 0)
+                    {
+
+                        <i class="fa fa-lock"></i> @(string.Join(", ", (List<string>)ViewBag.ViewRoles))
+
+                    }
+
+                    @if (!Globals.ISPRODUCTION)
+                    {
+                        @:| @(Globals.DB)
+                        @:| @(Request.UserAgent)
+                        @:| @(ConfigurationManager.AppSettings["HangfireProductionWebServerName"])
+                    }
+                    
+                </div>
+            }
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_SearchLayout.cshtml")
+    @*<div class="spinner-overlay hide" data-overlay="true">
+        <i class="fa fa-spinner fa-spin"></i> <span class="spinner-message">Loading...</span>
+    </div>*@
+    <div class="padding-50"></div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/js")
+    @RenderSection("scripts", required: false)
+    <script>
+        $( document ).ready(function(){
+            //$(".button-collapse").sideNav();
+            //$('select').material_select();
+            $('input:hidden').each(function (index, element) {
+             $(element).appendTo($(element).parent());
+            });
+            //$('input[length="*"], textarea[length="*"]').characterCounter();
+            $('form').find('input[type="text"]:first,textarea:first').eq(0).focus();
+        })
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,65 @@
+﻿@model TFOF.Areas.User.Models.RoleModel
+@{
+    Layout = "~/Views/Shared/_EditLayout.cshtml";
+}
+
+<div class="form-horizontal padding-bottom-100">
+    <div class="row">
+        <div class="col-sm-10 col-md-8 col-lg-8">
+            @Html.Display("Form", "FormEdit")
+        </div>
+    </div>
+    <div class="row padding-15">
+        <div class="col-sm-10 col-md-8 col-lg-8">
+            
+            <div class="panel az-panel">
+                <div class="mod-header">
+                    <a href="@Url.Action("EditUsers", "Role", new { id = Model.Id })" class="margin-10 pull-right clearfix"><i class="fa fa-edit"></i> Edit</a>
+                    Users
+                </div>
+                
+                @if (Model.UserRoles.Count > 0)
+                {
+                    <table class="table az-table table-hover table-panel condensed clearfix">
+                        <thead>
+                            <tr>
+                                <th width="1" align="right">
+                                    #
+                                </th>
+                                <th>
+                                    User
+                                </th>
+                                <th>
+                                    Added by
+                                </th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.UserRoles.OrderBy(o => o.User.LastName).Select((userRole, index) => new { index, userRole }))
+                        {
+                            <tr>
+                                <td width="1" align="right">
+                                    @(item.index + 1).
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details", "User", new { id = item.userRole.UserId })">@(item.userRole.User.FullName)</a> - @(item.userRole.User.Email)
+                                </td>
+                                <td nowrap>
+                                    @if (item.userRole.GetCreator() != null)
+                                    {
+                                       @(item.userRole.GetCreator().FullName) <span>on</span>
+                                    }
+                                    @(item.userRole.Created != null ? item.userRole.Created.Value.ToString("MM/dd/yyyy hh:mm tt") : "")
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center padding-30 font-grey">No Users</div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿namespace TFOF.Areas.[Area].Forms
+{
+    using TFOF.Areas.Core.Forms;
+    using TFOF.Areas.[Area].Models;
+    using System.Web.Mvc;
+
+	public class [Name]SearchForm : SearchForm
+    {
+        public [Name]SearchForm(UrlHelper url) : base(url)
+        {
+            SetApiUrl("[Area]API", "[Name]", url);
+[SearchFields][SortFields][Expands]
+        }
+    }
+
+
+    public class [Name]Form : Form
+    {
+        public [Name]Form()
+        {
+            FormTitle = "[Title]";
+[FormFields]
+			
+        }
+    }
+}

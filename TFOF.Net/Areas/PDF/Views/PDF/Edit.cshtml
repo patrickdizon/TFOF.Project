@@ -1,0 +1,47 @@
+﻿@model TFOF.Areas.PDF.Models.PDFModel
+@using TFOF.Areas.Core.Models
+
+@{
+    ViewBag.Title = "Edit " + Model.Id;
+    ViewBag.LinkNew = Url.Action("Create", "PDF");
+    ViewBag.LinkBackText = "Back to list";
+    ViewBag.LinkBackUrl = Url.Action("Index", "PDF");
+    ViewBag.Delete = new BaseDeleteModel(Url.Action("Delete", "PDF", new { Id = Model.Id }), Model.Id.ToString());
+    ViewBag.Model = Model;
+    Layout = "~/Views/Shared/_EditLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="input-field col-sm-12">
+                @Html.TextAreaFor(model => model.HtmlContent)
+                @Html.LabelFor(model => model.HtmlContent)
+                @Html.ValidationMessageFor(model => model.HtmlContent, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="input-field col-sm-12">
+                @Html.EditorFor(model => model.CustomerId)
+                @Html.LabelFor(model => model.CustomerId)
+                @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-primary"/>
+
+    <a href="@Url.Action("Generate","PDF", new { id = Model.Id })" class="btn">Generate</a>
+
+}
+
+@Html.Partial("~/Views/Shared/_FooterModifierCreatorLayout.cshtml")

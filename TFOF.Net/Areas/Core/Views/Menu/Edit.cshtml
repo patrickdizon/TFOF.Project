@@ -1,0 +1,51 @@
+﻿@using System.Linq
+@model TFOF.Areas.Core.Models.MenuModel
+@{
+    Layout = ViewBag.Layout != null ? ViewBag.Layout : "~/Views/Shared/_EditLayout.cshtml";
+}
+<div class="form-horizontal padding-bottom-100">
+    <div class="row">
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            @Html.Display("Form", "FormEdit")
+        </div>
+        @if (Model.ParentId == null || Model.ParentId == 0)
+        {
+        <div class="col-sm-8 col-md-8 col-lg-8">
+            <div class="mod-header">
+                <a href="@Url.Action("Create", "Menu", new { id = Model.Id })" class="text pull-right"><i class="fa fa-plus"></i></a>
+                Sub Menu
+            </div>
+            <table class="table az-table condensed">
+                <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Group</th>
+                    <th>Positon</th>
+                    <th>Area</th>
+                    <th>Controller</th>
+                    <th>Environment</th>
+                    
+                </tr>
+                </thead>
+                @if (Model.SubMenus.Count() > 0)
+                {
+                    foreach (var menu in Model.SubMenus.OrderBy(o => o.Position).OrderBy(g => g.GroupNumber))
+                    {
+                    <tr>
+                        <td nowrap>
+                            <a href="@Url.Action("Edit", "Menu", new { id = menu.Id })">@(menu.Label)</a>
+                        </td>
+                        <td>@(menu.GroupNumber)</td>
+                        <td>@(menu.Position)</td>
+                        <td>@(menu.Area)</td>
+                        <td>@(menu.Controller)</td>
+                        <td>@(menu.Environment)</td>
+                    </tr>
+                    }
+                }
+
+            </table>
+        </div>
+        }
+    </div>
+</div>

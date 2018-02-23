@@ -1,0 +1,21 @@
+﻿@model IEnumerable<TFOF.Areas.Email.Models.EmailExternalLogModel>
+
+@{
+    ViewBag.Title = "External Emails Log";
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<table class="az-table framed condensed highlight">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td> 
+                <b>@Html.ActionLink(item.Subject, "Details", new { id = item.Id })</b>
+                <div class="font-small">@Html.DisplayFor(i => item.SentTo) &bull; @Html.DisplayFor(i => item.SentDate)</div>
+            </td>
+            <td>
+                @Html.DisplayFor(i => item.Body)
+            </td>
+        </tr>
+    }
+</table>

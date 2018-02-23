@@ -1,0 +1,19 @@
+@model bool?
+@{
+
+    if (Model != null)
+    {
+        if ((bool)Model)
+        {
+            @:Yes
+        }
+        else {
+            @:No
+        }
+    }
+    if (Model == null)
+    {
+        @:No
+    }
+
+}

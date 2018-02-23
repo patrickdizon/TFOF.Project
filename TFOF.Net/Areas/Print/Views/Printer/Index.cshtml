@@ -1,0 +1,56 @@
+
+@{
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<div ng-controller="BasicController" ng-cloak>
+   @Html.Display("SearchForm", "FormSearch")
+
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Id.
+                </th>
+				<th>
+					 Name
+				</th>
+				<th>
+					 Description
+				</th>
+				<th>
+					 Tray
+				</th>
+				<th>
+					 Is Active
+				</th>
+
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }" ng-click="selectRow($index);" ng-dblclick="redirect('@Url.Action("Edit","Printer")/' + a.Id);">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit","Printer")/{{ a.Id }}">{{ a.Id }}</a> 
+            </td>
+			<td>
+				{{ a.Name }}
+			</td>
+			<td>
+				{{ a.Description }}
+			</td>
+			<td>
+				{{ a.PrinterTray.Name }}
+			</td>
+			<td ng-bind-html="a.IsActive | check ">
+			</td>
+
+        </tr>
+    </table>
+    </div>
+</div>

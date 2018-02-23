@@ -1,0 +1,90 @@
+﻿@using MvcReportViewer
+@using TFOF.Areas.Report.Models
+@using TFOF.Areas.Core.Attributes
+@model TFOF.Areas.Report.Models.ReportViewerModel
+@{
+
+    ViewBag.Title = Model.Report.Name;
+    Layout = "~/Views/Shared/_DetailsLayout.cshtml";
+
+}
+@section menu {
+    <div class="btn-toolbar pull-right" style="margin-top: -35px;">
+        
+        @if (User.IsInRole(SiteRole.Administrators))
+        {
+            <a href="@Url.Action("Edit","Report", new { id = Model.Report.Id })" class="btn btn-sm btn-default">
+                <i class="fa fa-pencil"></i> Edit
+            </a>
+        
+            <a modal="#UserModal" class="btn btn-sm btn-default">Users
+                <div class="badge sm">@(Model.Report.ReportUsers.Count)</div>
+            </a>
+        }
+        <a onclick="window.close()" class="btn btn-sm btn-default">Close</a>
+    </div>
+}
+
+<div ng-controller="BasicController" ng-init="init('ReportController')" class="report-viewer">   
+
+    @{
+        var parameters = new List<KeyValuePair<string, object>>();
+        if (Model.Parameters != null)
+        {
+            foreach (var p in Model.Parameters)
+            {
+                int index = 0;
+                parameters.Insert(index, new KeyValuePair<string, object>(p.Key, p.Value));
+                index++;
+            }
+        }
+        parameters = (parameters.Count > 0) ? parameters : null;
+      
+    }
+    @Html.MvcReportViewer(
+        Model.ReportPath,
+        Model.ServerUrl,
+        Model.UserName,
+        Model.Password,
+        parameters,
+        Model.ControlSetting
+    )
+</div>
+@if (User.IsInRole(SiteRole.Administrators))
+{
+<div id="UserModal" class="modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Report Users</h4>
+            </div>
+            <div class="modal-body">
+                
+                @if (Model.Report.ReportUsers.Count == 0)
+                {
+                    <p>No users have been assigned to access this report.</p>
+                }
+                else
+                {
+                    <p>The following users have access.</p>
+
+                <table>
+                @foreach (ReportUserModel user in Model.Report.ReportUsers)
+                {
+                    <tr>
+                            
+                        <td><img src="@(Url.Action("Image", "Avatar", new { area = "Account", id = user.UserId }))" class="circle sm"></td>
+                        <td>
+                            <b>@(user.User.FullName)</b><br />
+                            @(user.User.Email)
+                        </td>
+                    </tr>
+
+                }
+                </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}

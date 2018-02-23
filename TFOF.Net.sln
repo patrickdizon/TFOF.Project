@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFOF.Net", "TFOF.Net\TFOF.Net.csproj", "{A0D2A965-92DD-463D-859A-8566FD876DE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFOF.Net.Library", "TFOF.Net.Library\TFOF.Net.Library.csproj", "{53401163-135D-446E-8B5B-B0FEDAB451B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFOF.Net.Library.Test", "TFOF.Net.Library.Test\TFOF.Net.Library.Test.csproj", "{668DA550-A9B6-445E-A232-96BC2078BEDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFOF.Net.PrintService", "TFOF.Net.PrintService\PrintService\TFOF.Net.PrintService.csproj", "{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AWS|Any CPU = AWS|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Local|Any CPU = Local|Any CPU
+		Production|Any CPU = Production|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.AWS|Any CPU.ActiveCfg = AWS|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.AWS|Any CPU.Build.0 = AWS|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Development|Any CPU.Build.0 = Development|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Local|Any CPU.Build.0 = Local|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Production|Any CPU.Build.0 = Production|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0D2A965-92DD-463D-859A-8566FD876DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.AWS|Any CPU.ActiveCfg = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.AWS|Any CPU.Build.0 = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Local|Any CPU.ActiveCfg = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Local|Any CPU.Build.0 = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Production|Any CPU.Build.0 = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53401163-135D-446E-8B5B-B0FEDAB451B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.AWS|Any CPU.ActiveCfg = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.AWS|Any CPU.Build.0 = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Local|Any CPU.ActiveCfg = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Local|Any CPU.Build.0 = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Production|Any CPU.Build.0 = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{668DA550-A9B6-445E-A232-96BC2078BEDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.AWS|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.AWS|Any CPU.Build.0 = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Local|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Local|Any CPU.Build.0 = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Production|Any CPU.Build.0 = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBE3BDB-8B9E-4A96-AA2B-50412F8C6FA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

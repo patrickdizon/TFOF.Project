@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "Print Logs";
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div ng-controller="BasicController" ng-cloak ng-init="init('PrintController')">
+    @Html.Display("SearchForm", "FormSearch")
+
+    <div class="table-wrapper">
+        <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+            <thead>
+                <tr>
+                    <th>
+                        No.
+                    </th>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Entity Name
+                    </th>
+                    <th>
+                        Primary Key
+                    </th>
+                    <th>
+                        File Location &amp; Errors
+                    </th>
+                    <th>
+                        Printer Name
+                    </th>
+                    <th align="right">
+                        Printed
+                    </th>
+                    <th align="right">
+                        Retried
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Printed By
+                    </th>
+                    <th>
+                        Delete File
+                    </th>
+                </tr>
+            </thead>
+            <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }">
+                <td nowrap>
+                    <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+                </td>
+                <td>
+                    {{ a.PrintId }}
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-default" href="@Url.Action("ReQueue", "PrintLog")/{{ a.Id }}">
+                        Re-Queue
+                    </a>
+                </td>
+                <td>
+                    {{ a.EntityName }}
+                </td>
+                <td>
+                    {{ a.PrimaryKey }}
+                </td>
+                <td style="width: 30%; word-break: break-word">
+                    {{ a.FileLocation }}
+                    <div class="font-red">{{ a.ErrorMessage }}</div>
+                </td>
+                <td style="width: 20%; word-break: break-word">
+                    {{ a.Printer.Description }} <div>{{ a.Printer.PrinterTray.Name }}</div>
+                </td>
+                <td nowrap align="right">
+                    {{ a.PrintedDateTime | date : 'MMM dd, yyyy' }}
+                    <div>{{ a.PrintedDateTime | date : 'h:mm a' }}</div>
+                </td>
+                <td align="right">
+                    {{ a.RetryCount }}
+                </td>
+                <td>
+                    {{ a.Status }}
+                </td>
+                <td nowrap>
+                    {{ a.CreatedBy.FullName }}
+                </td>
+                <td>
+                    {{ a.DeleteFile ? 'True':'False' }}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="PrintDocumentModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Print Documents</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This process is executed as a background job. You will be notified once it is completed. Would you like to print the documents now?
+                </p>
+                <div class="padding-top-20 clearfix">
+                    <div class="pull-right">
+                        <form action="@Url.Action("Print","PrintDocument")" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary" onclick="$(this).attr('disabled', 'disabled')">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">No</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

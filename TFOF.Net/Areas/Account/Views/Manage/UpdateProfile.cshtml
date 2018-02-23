@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNet.Identity
+@using TFOF.Areas.Account.Helpers
+@model TFOF.Areas.Account.Models.UpdateProfileViewModel
+@{
+    Layout = "~/Views/Shared/_EditLayout.cshtml";
+}
+
+<div class="form-horizontal padding-bottom-100">
+    <div class="row">
+        <div class="col-sm-12 col-md-7 col-lg-6">
+            <div class="padding-15">
+                <a modal="{ id: '#UploadImage', url: '@Url.Action("UploadAvatar", "Manage")', draggable: true }">
+                    <img  src="@Url.Action("Image","Avatar", new { area = "Account" })/@(User.Identity.GetUserId())" class="circle md" />
+                </a>
+            </div>
+            @Html.Display("Form", "FormEdit")
+        </div>
+        <div class="col-sm-12 col-md-5 col-lg-4">
+            <div class="padding-15">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#roles" aria-controls="roles" role="tab" data-toggle="tab">Roles</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane framed active padding-10" id="logs">
+
+                        @if (Model.Roles.Count() > 0)
+                        {
+                            foreach (var userrole in Model.Roles.OrderBy(o => o))
+                            {
+                                <div>@(userrole)</div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

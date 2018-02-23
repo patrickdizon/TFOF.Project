@@ -1,0 +1,8 @@
+﻿@{
+    ViewBag.DrawerPosition = (ViewBag.DrawerPosition != null ? ViewBag.DrawerPosition : "");
+}
+
+<div class="drawer drawer-right show" id="{id}">
+    <a class="drawer-handle" onclick="$('#{id}').removeClass('show')" aria-label="Close"><i class="fa fa-caret-right"></i></a>
+    @RenderBody()
+</div>

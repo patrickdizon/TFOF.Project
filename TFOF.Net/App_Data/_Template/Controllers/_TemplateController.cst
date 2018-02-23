@@ -1,0 +1,24 @@
+﻿namespace TFOF.Areas.[Area].Controllers
+{
+	using System.Collections.Generic;
+
+	using TFOF.Areas.Core.Controllers;
+	using TFOF.Areas.Core.Forms;
+	using TFOF.Areas.[Area].Forms;
+	using TFOF.Areas.[Area].Models;
+
+	public class [Name]Controller : CoreController<[Name]Model>
+	{
+		public [Name]Controller()
+		{
+			//CanCreate = false;
+			//CanDelete = true;
+			//ForeignKey = "";
+			Form = new [Name]Form();
+			ReturnTo = new ReturnTo(this, "Index", null, "Name", new string[] { "Create", "Edit" });
+			TitlePlural = "[TitlePlural]";
+			SearchForms.Add(new [Name]SearchForm(Url));
+		}
+
+	}
+}

@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Reports";
+    ViewBag.LinkNew = Url.Action("Create", "Report");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+@section menu {
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default" href="@Url.Action("List","ReportUser")"><i class="fa fa-users"></i> Users...</a>
+    </div>   
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default" href="@Url.Action("Index","ReportUserActivityLog")">Activity Logs...</a>
+    </div>
+}
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Security
+                </th>
+                <th align="center">
+                    Users
+                </th>
+                <th>
+                    Schedule
+                </th>
+                <th>
+                    Active
+                </th>
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td width="1">
+                
+                <a class="btn btn-xs btn-default btn-block" href="@Url.Action("Viewer", "Report")/{{ a.Id }}" target="Report-{{ a.Id }}">
+                    View <i class="fa fa-external-link font-10"></i>
+                </a>
+                @*<a class="btn btn-xs btn-default btn-block" modal="{ id: '#RunReportModal', url: '@Url.Action("Run", "Report")/{{ a.Id }}'}" ng-hide="a.Link">
+                    <i class="fa fa-play font-10"></i> Run
+                </a>*@
+
+                @*<div data-ng-if="a.Status != 'View'">
+                    <a class="btn btn-xs btn-default btn-block" modal="{ id: '#RunReportModal', url: '@Url.Action("Run", "Report")/{{ a.Id }}'}" ng-hide="a.Link">
+                        <i class="fa fa-play font-10"></i> Run
+                    </a>
+                </div>*@
+                <div data-ng-if="a.Status == 'Printed'">
+                    <a class="btn btn-xs btn-default" href="@Url.Action("Viewer", "Report")/{{ a.Id }}">
+                        <i class="fa fa-play font-10"></i> View
+                    </a>
+                </div>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit","Report")/{{ a.Id }}">{{ a.Name }}</a>
+                <div class="font-grey">{{ a.Description }}</div>
+            </td>
+            <td>
+                {{ a.Category }}
+            </td> 
+            <td>
+                {{ a.Permit }}
+            </td> 
+            
+            <td align="center">
+               {{ a.ReportUsers.length }}
+            </td>
+            <td>
+                {{ a.ScheduledMonth }}
+                {{ a.ScheduledWeek }}
+                {{ a.ScheduledDays }}
+                {{ a.ScheduledTime }}
+            </td>
+            <td ng-bind-html="a.IsActive | check">
+            </td>
+            
+        </tr>
+    </table>
+    </div>
+</div>

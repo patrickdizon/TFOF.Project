@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Roles";
+    ViewBag.LinkNew = @Url.Action("Create", "Role");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+    <div class="table-wrapper">
+        <table class="table az-table condensed">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Users</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+                <td nowrap>
+                    <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+                </td>
+                <td>
+                    <div><a href="@Url.Action("Edit", "Role")/{{a.Id}}" ng-bind-html="trustAsHtml((a.Name))"></a></div>
+                </td>
+                
+                <td>
+                    <span ng-repeat="b in a.UserRoles track by $index">
+                       
+                        {{ b.User.FullName }}<span ng-hide="$last">, </span>
+                    </span>
+
+                </td>
+                <td nowrap>{{ a.Created | date : "mediumDate" }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

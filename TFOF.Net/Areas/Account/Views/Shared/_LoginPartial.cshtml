@@ -1,0 +1,37 @@
+﻿@using Microsoft.AspNet.Identity
+@using TFOF.Areas.Account.Helpers
+@if (Request.IsAuthenticated)
+{
+
+
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            
+            <img src="@Url.Action("Image","Avatar", new { area = "Account" })/@(User.Identity.GetUserId())" class="circle"/>
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                @Html.ActionLink(User.Identity.GetFullName(), "UpdateProfile", "Manage", new { area = "Account" }, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li>
+                @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { area = "Account" }, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li role="separator" class="divider"></li>
+            <li> 
+                @using (Html.BeginForm("LogOff", "Account", new { area = "Account" }, FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                }
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+            </li>
+        </ul>
+    </li>
+}@* 
+else
+{
+    <ul class="right hide-on-med-and-down">
+        <li>@Html.ActionLink("Register", "Register", "Account", new { area = "Account" }, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", new { area = "Account" }, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+} *@

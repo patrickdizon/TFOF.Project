@@ -1,0 +1,80 @@
+﻿@model TFOF.Areas.Account.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Create a new account";
+}
+
+<section id="loginForm">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4 ">
+
+            <img src="@Url.Content("~/Images/logo.png")" class="logo">
+            <h4>@(ViewBag.Title)</h4>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.TextBoxFor(m => m.FirstName, new { @maxlength = "256" })
+                            @Html.LabelFor(m => m.FirstName)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.TextBoxFor(m => m.LastName, new { @maxlength = "256" })
+                            @Html.LabelFor(m => m.LastName)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.TextBoxFor(m => m.Email)
+                            @Html.LabelFor(m => m.Email)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.TextBoxFor(m => m.Title, new { @maxlength = "100" })
+                            @Html.LabelFor(m => m.Title)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.DropDownListFor(m => m.SelectedTimeZone, new SelectList(Model.TimeZones, "Value", "Text", "Central Standard Time"))
+                            @Html.LabelFor(m => m.SelectedTimeZone)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.PasswordFor(m => m.Password)
+                            @Html.LabelFor(m => m.Password)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-field">
+                            @Html.PasswordFor(m => m.ConfirmPassword)
+                            @Html.LabelFor(m => m.ConfirmPassword)
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Register" />
+            }
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
+        </div>
+    </div>
+</section>

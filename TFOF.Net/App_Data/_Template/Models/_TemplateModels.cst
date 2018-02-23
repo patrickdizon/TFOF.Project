@@ -1,0 +1,21 @@
+﻿namespace TFOF.Areas.[Area].Models
+{
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    using TFOF.Areas.Core.Models;
+    using TFOF.Areas.[Area].Models;
+	[ModelUsings]
+    using TFOF.Areas.FieldOption.Models;
+
+    [Table("[TableName]")]
+    public class [Name]Model [BaseModel]
+    {
+[ModelFields]
+
+		//public override WellTableModel WellTable
+        //{
+        //    get { return new WellTableModel() { TableName = "[]", IdField = "Id" }; }
+        //}
+    }
+}

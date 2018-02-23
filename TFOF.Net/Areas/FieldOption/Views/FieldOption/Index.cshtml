@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TFOF.Areas.FieldOption.Models.FieldOptionModel>
+
+@{
+    ViewBag.Title = "Field Options";
+    ViewBag.LinkNew = @Url.Action("Create", "FieldOption");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div class="padding-sides-15">
+Field Options are group of values made available to a select field as part of strict assignment or hints.
+</div>
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Slug
+                </th>
+                <th>
+                    Values
+                </th>
+                <th>
+                    Registrations
+                </th>
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td nowrap>
+                <a href="@Url.Action("Edit", "FieldOption", new { controller = "FieldOption" })/{{a.Id}}">
+                    {{ a.Name }}
+                </a>
+            </td>
+            <td nowrap>
+                {{a.Slug }}
+            </td>
+            <td>
+                {{ a.FieldOptionValues.length }}<span ng-if="a.FieldOptionValues.length == filters.limit">+</span>
+            </td>
+            <td>
+                {{ a.FieldOptionModelFields.length }}: 
+                <span ng-repeat="field in a.FieldOptionModelFields track by $index">
+                    {{ field.ModelField }}<span ng-hide="$last">, </span>
+                </span>
+            </td>
+
+        </tr>
+    </table>
+    </div>
+</div>

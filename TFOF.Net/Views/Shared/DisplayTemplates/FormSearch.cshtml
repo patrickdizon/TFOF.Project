@@ -1,0 +1,347 @@
+﻿@*
+ Author: Patrick Dizon
+Date: 7/14/2016
+The Input Search is a combination of search and input field.
+*@
+
+@using TFOF.Areas.Core.Forms;
+@model TFOF.Areas.Core.Forms.SearchForm
+
+@if (Model != null)
+{
+
+
+    var guid = "SearchForm-" + Model.GetType().GUID;
+    string classname = (string)ViewData["class"];
+    string size = (string)ViewData["size"];
+    string btnstyle = (string)ViewData["btnStyle"];// null;// "btn-default";
+    string buttons = (string)ViewData["buttons"]; //Extra buttons
+    if (classname == "borderless")
+    {
+        size = "small";
+    }
+    if (size == "small")
+    {
+        btnstyle = string.IsNullOrWhiteSpace(btnstyle) ? "btn-borderless" : btnstyle;
+    }
+
+    if (string.IsNullOrWhiteSpace(btnstyle))
+    {
+        btnstyle = "btn-default";
+    }
+
+
+
+<div id="@guid" class="@((!string.IsNullOrWhiteSpace(size) && size == "small") ? "search-form none borderless" : "search-form")" ng-cloak>
+   
+@if (Model != null)
+{
+    <span ng-init='initFilter("@(Model.GetType().GUID)", "@(Model.ApiUrl)", @(Model.Top),  @(Model.Load.ToString().ToLower()), "@(Model.Expand)", @Html.Raw(Json.Encode(Model.Selects)), @(Model.UseLocalStorage.ToString().ToLower()) )'></span>
+
+
+    if (Model.RestrictSearchFields != null)
+    {
+        foreach (var restrictField in Model.RestrictSearchFields)
+        {
+            <span ng-init='addFilter("@(restrictField.Name)", @Html.Raw(Json.Encode(restrictField.Value)), "@(restrictField.DataType)", "@(restrictField.Comparator)", "@(restrictField.Operator)", "", true);'></span>
+
+        }
+    }
+    @helper searchFields(string guid, string btnstyle) {
+
+        if (Model.SearchFields != null && Model.SearchFields.Count() > 0)
+        {
+            
+            @*<div class="btn-group pull-right">
+                <a ng-click="removeFilter('*'); find({offset: 0});" class="btn btn-sm @(btnstyle) btn-borderless">&times; Clear Filters</a>
+            </div>*@
+            
+            foreach (var searchField in Model.SearchFields)
+            {
+                if (searchField.Value == null)
+                {
+                    searchField.Value = new string[] { null };
+                }
+                <span ng-init='addFilter("@(searchField.Name)",  @Html.Raw(Json.Encode(searchField.Value)),  "@(searchField.DataType)", "@(searchField.Comparator)", "@(searchField.Operator)", "@(searchField.InputType)", false);'></span>
+                <div class="btn-group" id="@(searchField.Name)-group">
+                    <a class="btn btn-sm @(btnstyle) btn-borderless" toggle-filter="#@(guid)" ng-class='{ "active" : filterLabel("@(searchField.Name)", "@(searchField.InputType)") != "" }'>
+                        <span ng-hide='filterLabel("@(searchField.Name)", "@(searchField.InputType)")' >@(searchField.Label): All</span>
+                        <span ng-show='filterLabel("@(searchField.Name)", "@(searchField.InputType)")' class="filter-display-text" ng-bind-html='filterLabel("@(searchField.Name)", "@(searchField.InputType)")'>
+                        </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                   
+                    <ul class="dropdown-menu">
+                    <li class="dropdown-header padding-sides-10 ">
+                        @(searchField.Label)
+                    </li>
+                    <li class="padding-bottom-5 padding-sides-10 border-bottom" ng-init="changeComparator('@(searchField.Name)');">
+                        <table style="width: 100%">
+                            <tr>
+                                <td valign="middle" nowrap>
+                                    <select ng-model='filters.filters["@(searchField.Name)"].operator' class="font-13">
+                                        <option value="And">And</option>
+                                        @if (!searchField.Comparator.Equals(SearchField.Comparators.TextSearch))
+                                        { <option value="Or">Or</option>}
+                                    </select>
+                                    @Html.DropDownList(searchField.Name, searchField.ComparatorOptions(), new { @ng_change = "changeComparator('" + searchField.Name + "')", @ng_model = "filters.filters['" + searchField.Name + "'].comparator", @class = "font-13" })
+                                    <button class="btn btn-xs btn-primary" ng-hide="loading" ng-click="filters.ordering=_sorter_.join(','); rangeLookup('@(searchField.Name)'); find({offset:0})">Apply</button>
+
+                                    <button class="btn btn-xs btn-primary disabled" ng-show="loading">Apply</button>
+                                </td>
+                                <td class="padding-sides-5"></td>
+                                <td width="1" valign="middle" align="right">
+                                    <button class="btn btn-xs btn-default" ng-click='removeFilter("@(searchField.Name)"); find({offset:0});' ng-disabled="!filters.filters['@(searchField.Name)']">
+                                        Clear
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>  
+                    @if (searchField.Options != null && searchField.Options.Count() > 0)
+                    {
+                        <li class="open">
+                            @foreach (var option in searchField.Options)
+                            {
+                                <span ng-init='filters.filters["@(searchField.Name)"].options.push({ value: "@(option.Value != "" ? option.Value.Replace("\\","\\\\") : "[null]")", label: "@(option.Text.Replace("\"", "\\\""))", selected: @(searchField.Value != null && searchField.Value.Contains(option.Value) ? "true" : "false") });'></span>
+                            }
+                            <ul class="padding-sides-10 no-style" ng-class='{"max-height-240 scrollable" : filters.filters["@(searchField.Name)"].options.length > 10}'>
+                                 <li class="padding-top-10" ng-show='filters.filters["@(searchField.Name)"].options.length > 10' >
+                                    <input ng-model='@(searchField.Name)_filter' class="filter-input-text" placeholder="Search options">
+                                </li>
+                                <li class="divider"></li>
+                                <li ng-repeat='o in filters.filters["@(searchField.Name)"].options  | filter:  @(searchField.Name)_filter'>
+                                    <label class="filter-input-checkbox">
+                                        <input type="checkbox" ng-model='o.selected' />
+                                        {{ o.label }}
+                                        <i class='font-grey' ng-hide="o.label">Empty</i>
+                                    </label>
+                                </li>
+                               
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                            
+                    <li class="padding-10" ng-class="{ 'scrollable max-height-300': filters.filters['@(searchField.Name)'].values.length > 10 }">
+                        <table style="width: 100%">
+                            <tr ng-repeat='f in filters.filters["@(searchField.Name)"].values track by $index'>
+                                <td ng-if='filters.filters["@(searchField.Name)"].comparator.endsWith("range")' align="right">
+                                    <span ng-if="$index == 0" class="padding-sides-5">From</span>
+                                    <span ng-if="$index == 1" class="padding-sides-5">To</span>
+                                </td>
+                                <td ng-class="{'padding-top-5':$index }">
+                                    @*removeFilter("@(searchField.Name)", true);*@
+                                    <input type="@(searchField.InputType)"  ng-model='filters.filters["@(searchField.Name)"].values[$index]' id="filter-@(searchField.Name)" ng-enter='find({offset:0})' class="filter-input-text">
+                                   
+                                 </td>
+                                <td ng-class="{'padding-top-5':$index }" class="padding-sides-5" ng-if='!filters.filters["@(searchField.Name)"].comparator.endsWith("range")'>
+                                    <span ng-show="$index">
+                                        <a class="padding-5 font-black" ng-click='arrayRemove(filters.filters["@(searchField.Name)"].values,$index)'><i class="fa fa-remove"></i></a>
+                                    </span>
+                                    @if(!searchField.Comparator.Equals(SearchField.Comparators.TextSearch)) { 
+                                    <span ng-show="$index == 0">
+                                        <a class="padding-5 font-black" ng-click='filters.filters["@(searchField.Name)"].values.push(null)'><i class="fa fa-plus"></i></a>
+                                        
+                                    </span>
+                                    }
+                                </td>
+                            </tr>
+                      
+                            <tr>
+                                <td colspan="3">
+                                @if (searchField.Comparator.Equals(SearchField.Comparators.TextSearch))
+                                {
+                                    <div class="font-small padding-top-5">
+                                        <b>Text search examples:</b>
+                                        <ol>
+                                            <li>Drain AND Hose</li>
+                                            <li>Drain OR Hose</li>
+                                            <li>Sister AND "Called Michael"</li>
+                                            <li>"Called Sister"</li>
+                                        </ol>
+                                    </div>
+                                }</td>
+                            </tr> 
+                            <tr>
+                                <td colspan="3">
+                                    <hr class="padding-top-5" />
+                                    <a class="font-12 font-black" ng-click='@(searchField.Name)Bulkuploader = !@(searchField.Name)Bulkuploader'>
+                                        <i class="fa" ng-class="{'fa-caret-right':  !@(searchField.Name)Bulkuploader, 'fa-caret-down': @(searchField.Name)Bulkuploader}"></i>Paste Entries
+                                    </a>
+                                    <div ng-class="{ 'ng-hide': !@(searchField.Name)Bulkuploader }">
+                                        <textarea ng-model="@(searchField.Name)BulkValues"></textarea>
+                                        <a class="btn btn-default btn-sm pull-right" ng-click='setFilterValues("@(searchField.Name)", @(searchField.Name)BulkValues)'>
+                                            Set
+                                        </a>
+                                        <span class="font-grey">
+                                            Paste one value per line.
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                        
+                    }
+                    
+                </ul>
+            </div>
+            }
+        }
+    }
+
+    <div class="row sort-fields {{ sideNav }}" data-spy="@(string.IsNullOrWhiteSpace(size) ? "affix" : "")"  data-offset-top="150">
+        @if (string.IsNullOrWhiteSpace(size) && Model.SearchFields != null && Model.SearchFields.Count() > 0)
+        {
+            <div class="col-sm-12">
+                @searchFields(@guid, @btnstyle)
+            <hr/>
+            </div>
+        } <div class="col-sm-12">
+           
+
+            @if (!string.IsNullOrWhiteSpace(size) && size == "small")
+            {
+                @searchFields(@guid, @btnstyle)
+            }
+            @if (Model.SortFields != null && Model.SortFields.Count() > 0)
+            {
+            <div class="dropdown btn-group  @if (!Model.IsVisibleSortFields) { @Html.Raw("hide")} " id="order-group">
+                <a class="btn btn-sm @(btnstyle) btn-borderless" toggle-filter="#@(guid)">
+                    Sort:
+                    <span ng-hide="filters.orderApplied">All</span>
+                    <span ng-show="filters.orderApplied">
+                        <span ng-bind-html="filters.orderLabels[filters.orderApplied[0].name]"></span> <i class="fa fa-long-arrow-down" ng-show="filters.orderApplied[0].isDescending"></i>
+                        
+                        <span ng-show="filters.orderApplied.length > 1">
+                        + {{ filters.orderApplied.length -1 }} more
+                        </span>
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu padding-sides-10">
+                    <li class="dropdown-header">
+                        Sort
+                    </li>
+                    <li>
+                        <table>
+                        <thead class="font-11">
+                            <tr>
+                                <th>Column</th>
+                                <th>Descending</th>
+                            </tr>
+                        </thead>
+                        @{ 
+                            var i = 0;
+                        }
+                        @foreach (var sortField in Model.SortFields)
+                        {
+                        <tr>
+                            <td>
+                            <span ng-init="filters.orderLabels.@(sortField.Name) = '@(sortField.Label)'"></span>
+
+                            @if (sortField.IsDefault)
+                            {
+                                <span ng-init="filters.order.push({'name': '@(sortField.Name)', 'label': '@(sortField.Label)', 'isDescending': @if (sortField.IsDescending)
+                                { @Html.Raw("true")}
+                                else
+                                {@Html.Raw("false") } })"></span>
+                            }
+                            else
+                            {
+                                <span ng-init="filters.order.push({'name': '', 'label': '@(sortField.Label)', 'isDescending': false})"></span>
+                            }
+                            <select ng-model='filters.order[@(i)].name' class="font-12" >
+                                <option value=""></option>
+                                @foreach (var option in Model.SortFields)
+                                {
+                                    <option value="@(option.Name)" @if (option.IsDefault && sortField.Name == option.Name)
+                                    { @Html.Raw("selected")}>@(option.Label)</option>
+                                }
+                            </select>
+                            </td>
+                            <td class="padding-sides-5" align="center">
+                                 <input type="checkbox" id="@(guid)_sortdesc@(i)" ng-model='filters.order[@(i)].isDescending' @if (sortField.IsDescending)
+                                 { @Html.Raw("checked") } > 
+                            </td>
+                        </tr>
+                            {
+                                i++;
+                            }
+                        }
+                        </table>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-xs btn-primary" ng-click="filters.ordering=_sorter_.join(','); find({offset:0})">Apply</button>
+                    </li>
+                </ul>
+            </div>
+            }
+
+            <!--INSERT LOAD PREVIOUS SEARCH AND SAVED SEARCH HEAR-->
+            @if (Model.Translations != null)
+            {
+                foreach (var k in Model.Translations)
+                {
+                    <span ng-init='filters.translations["@(k.Key)"] = {"[null]": "[null]"}'></span>
+                    foreach (var m in k.Value)
+                    {
+                        <span ng-init='filters.translations["@(k.Key)"]["@(m.Value.Replace("\\", "\\\\"))"] = "@(m.Text.Replace("\"", "\\\""))"'></span>
+                    }
+
+                }
+            }
+            <span ng-init='find({ init: true })'></span>
+
+            @Html.Raw(buttons)
+        
+            <div class="pull-right @if (!Model.IsVisibleNavigation) { @Html.Raw("hide")} ">
+                @if (User.IsInRole("Administrators") || User.IsInRole("Executives"))
+                {
+                    <span ng-hide="isEmpty(basics) || loading" ng-cloak class="page-info">
+                        {{ pageInfo() }}
+                    </span>
+                }
+                <span ng-show="loading" ng-cloak class="page-info">
+                    <i class="fa fa-spinner fa-spin font-14"></i> Loading...    
+                </span>
+                <div class="btn-group" ng-cloak>
+                    @if (User.IsInRole("Administrators"))
+                    {
+                        <a ng-click="find()" class="btn btn-sm btn-borderless" >
+                            <i class="fa fa-refresh spinner"></i>
+                        </a>
+                    }
+                    <a ng-click="previous()" class="btn btn-sm btn-borderless" ng-disabled="filters.offset==0">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+
+                    <div class="btn-group" role="group" ng-show='showPagination()'>
+                        <a class="btn btn-sm btn-borderless"  toggle-filter="#@(guid)"><span ng-bind="pageNumber()"></span> <i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu pull-right max-height-240 scrollable" style="min-width: 40px;">
+                            <li class="dropdown-header padding-sides-10">
+                            Page
+                            </li>
+                            <li ng-repeat="p in range(0,paginate()) " ng-class="{active: p+1==pageNumber()}">
+                                <a ng-click="pageSelect(p)" >{{ p+1 }}</a>
+                            </li>
+                            <li ng-show="filters.count > 9000">
+                                <a class="fa fa-ellipsis-h"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a ng-click="next()" class="btn btn-sm btn-borderless" ng-show="filters.nextSet">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                    <a class="btn btn-sm btn-borderless disabled" ng-hide="filters.nextSet">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}

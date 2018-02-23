@@ -1,0 +1,92 @@
+﻿@using TFOF.Areas.Core.Forms
+@using TFOF.Areas.Core.Services
+@using System.Data.Entity.Core.Objects
+@{
+    Form Model = (Form)ViewData["Form"];
+    ViewBag.Title = ((Model != null && Model.FormTitle != null) ? Model.FormTitle : (ViewBag.Title != null ? ViewBag.Title : ""));
+    ViewBag.Delete = ((Model != null && Model.Delete != null) ? Model.Delete : (ViewBag.Delete != null ? ViewBag.Delete : null));
+    ViewBag.LinkNew = ((Model != null && Model.NewLink != null) ? Model.NewLink : (ViewBag.LinkNew != null ? ViewBag.LinkNew : ""));
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+<div class="navbar-static-top"> @*nav-affix" data-spy="affix" data-offset="100*@
+    <div class="row padding-sides-15">
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <h4 class="header-title">
+                @if (!string.IsNullOrWhiteSpace(ViewBag.SuperTitle))
+                {
+                    <span class="font-10">@(ViewBag.SuperTitle)</span><br />
+                }
+                @Html.Raw(ViewBag.Title)
+                @if (!string.IsNullOrWhiteSpace(ViewBag.SubTitle))
+                {
+                    <br /><span class="font-10">@(ViewBag.SubTitle)</span>
+                }
+            </h4>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 padding-top-10">
+            <div class="btn-toolbar pull-right"> 
+                @if(IsSectionDefined("menu")) {
+                    
+                        @RenderSection("menu", required: false)
+                    
+                }
+                @if (ViewBag.Delete != null || !string.IsNullOrWhiteSpace(ViewBag.LinkNew) || IsSectionDefined("moremenu") || ViewData["AuditSearchForm"] != null)
+                {
+                <div class="btn-group">
+                  <a class="btn btn-sm btn-default btn-dropdown dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                   
+
+                        @if(!string.IsNullOrWhiteSpace(ViewBag.LinkNew)) {
+                        <li><a class="btn-floating blue" href="@(ViewBag.LinkNew)"><i class="fa fa-plus"></i> Create</a></li>
+                        }
+                        @if(IsSectionDefined("moremenu")) {
+                            @RenderSection("moremenu", required: false)
+                        }
+                        @if(ViewBag.Delete != null) {
+
+                            <li>
+                                @if(ViewBag.Delete.Allowed){
+                                    <a class="btn-floating red modal-trigger" modal="#DeleteModal" >
+                                    <i class="fa fa-trash-o"></i> Delete</a>
+                                }
+                                else
+                                {
+                                    <a class="btn-floating red modal-trigger" modal="#DeleteModal">
+                                        <i class="fa fa-trash-o"></i> Delete
+                                    </a>
+                                }
+                            </li>
+                        }  
+                        <li class="divider"></li>
+                   
+                        @if (ViewData["AuditSearchForm"] != null)
+                        {
+                        <li ng-controller="BasicController" ng-init="init('ChangeLogButtonController')">
+                            <a modal="{ id: '#AuditLogViewer', draggable: true, backdrop: false} " ng-click="transmit('AuditSearchController', 'basic', 1)">
+                                <i class="fa fa-history"></i>
+                                History
+                            </a> 
+                        </li>
+                        }
+                    </ul>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/_DeleteModal.cshtml")
+<div style="padding-right: 15px;">
+    @RenderBody()
+</div>
+<div class="padding-50" ng-controller="BasicController" ng-init="init('ChangeLogButtonController')">
+    @Html.Partial("~/Areas/Core/Views/Shared/_AuditViewer.cshtml")
+</div>
+@section scripts {
+    @RenderSection("scripts", required: false)
+}

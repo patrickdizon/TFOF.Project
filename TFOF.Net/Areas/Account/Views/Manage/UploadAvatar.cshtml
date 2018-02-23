@@ -1,0 +1,43 @@
+﻿@model TFOF.Areas.Account.Models.UploadAvatarViewModel
+@{
+    ViewBag.Title = "Profile Picture";
+    Layout = "~/Views/Shared/_ModalSmallLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"].ToString()</div>
+}
+@using (Html.BeginForm("UploadAvatar", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="input-field col-sm-12">
+                @Html.TextBoxFor(m => m.RawAvatar, new { type = "file" }) 
+                @Html.ValidationMessageFor(model => model.RawAvatar, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="row padding-top-10">
+        <div class="col-sm-12">
+            <div class="input-field col-sm-12">
+                <input type="submit" class="btn btn-primary btn-block" value="Update Picture" />
+            </div>
+        </div>
+    </div>
+    <div class="row padding-top-10">
+        <div class="col-sm-12">
+            <div align="center" class="input-field col-sm-12 font-bold">
+                Or
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="input-field col-sm-12">
+                <a href="@Url.Action("DeleteAvatar","Manage")" class="btn btn-danger btn-block">Delete</a>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TFOF.Areas.PDF.Models.PDFModel>
+
+@{
+    ViewBag.Title = "PDF";
+    ViewBag.LinkNew = @Url.Action("Create","PDF");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<div class="">
+    PDFs are items or services that a personnel can get paid to perform. 
+</div>
+<p>
+   
+</p>
+<table class="az-table framed condensed highlight">
+    <thead>
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            Customer Id
+        </th>
+        <th>
+            Content
+        </th>
+    </tr>
+    </thead>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Id.ToString(), "Edit", new { id = item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(i => item.CustomerId)
+        </td>
+        <td>
+            @Html.DisplayFor(i => item.HtmlContent).ToString().Substring(0,0)
+        </td>
+    </tr>
+}
+
+</table>

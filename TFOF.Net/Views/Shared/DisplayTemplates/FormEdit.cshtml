@@ -1,0 +1,267 @@
+﻿@*
+ Author: Patrick Dizon
+Date: 8/2/2016
+This template is used to create a quick form based on Core Forms.
+
+*@
+@using System.Web.Mvc;
+@using TFOF.Areas.Core.Forms;
+@using TFOF.Areas.Core.Helpers;
+
+@model TFOF.Areas.Core.Forms.Form
+
+@{
+    var guid = "EditForm" + ViewData["Id"];
+    var classname = ViewData["class"];
+    //var name = ViewData["name"];
+    //var id = ViewData["id"];
+    //var target = ViewData["target"];
+    ViewData.TemplateInfo.HtmlFieldPrefix = "";
+    //var attributes = new Dictionary<string, object>();
+    //attributes.Add("Id", id);
+    //attributes.Add("Name", name);
+    //attributes.Add("Target", target);
+
+}
+
+@using (Html.BeginForm(null, null, Model.Method, Model.FormAttributes))
+{
+@Html.AntiForgeryToken()
+
+<div id="@(guid)" class="@(classname != null ? classname : "")">
+    
+    @if(Model != null)
+    {
+    <div class="row">
+        <div class="col-sm-12">
+
+            @Html.ValidationSummary("", new { @class = "alert alert-danger margin-15" })
+            @(Model.ForeignKeys)
+            <div ng-cloak>
+                @if (Model.Fields != null)
+                {
+                    foreach (var field in Model.Fields)
+                    {   
+                        if(field is GroupLabel) 
+                        {
+                            <div class="padding-top-10 col-sm-12 clearfix">
+                                <div class="mod-header">
+                                    <span class="text">@(field.Label)</span>
+                                </div>
+                            </div>
+                        }
+                        else if(field is HiddenField || field is IdField) 
+                        {
+                            if(field.Value != null && field is IdField) 
+                            {
+                                <input type="hidden" name="@(field.Name)" id="@(field.Name)" value="@(field.Value)" @(new { }.AttributesToString(field.Attributes))>
+                            }
+                            else if (field is HiddenField)
+                            {
+
+                                <input type="hidden" name="@(field.Name)" id="@(field.Name)" value="@(field.Value)" @(new { }.AttributesToString(field.Attributes))>
+                                }
+                            }
+                            else if (field is BooleanField)
+                            {
+                            <div class="input-field checkbox @(field.ClassNames != null ? field.ClassNames : "col-sm-12")">
+                                <label> @Html.CheckBox(field.Name, string.Equals(field.Value, "True"), new { }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                    @(field.Label)
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="input-field @(field.ClassNames != null ? field.ClassNames : "col-sm-12") @(field is BlankCell ? "blank-cell" : "")">
+                            @if (field is CharField)
+                            {
+                                if (field.Options != null && field.Options.Count() > 0)
+                                {
+                                    if (((CharField)field).Widget is SelectizeWidget)
+                                    {
+                                        var widget = (SelectizeWidget)((CharField)field).Widget;
+                                        @Html.DropDownList(field.Name, field.Options, new { @ng_selectized = "", @create = widget.Create, @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                    }
+                                    else
+                                    {
+
+                                        if (((CharField)field).IsMultipleSelect)
+                                        {
+                                            <div class="padding-10">
+                                            @for (int i = 0; i < field.Options.Count(); i++)
+                                            {
+                                                bool ischecked = false;
+                                                if (field.Value != null)
+                                                {
+                                                   ischecked = field.Value.Split(',').Contains(field.Options.ToList()[i].Value);
+                                                }
+                                                //Do not include empty options that's availabel in Options
+                                                if (!string.IsNullOrWhiteSpace(field.Options.ToList()[i].Value)){
+                                                    <label class="checkbox">
+                                                        <input type="checkbox" name="@(field.Name)" id="@(field.Name)_@(i)" value="@(field.Options.ToList()[i].Value)" @(ischecked ? "checked" : "")/> 
+                                                        <span class="font-black">@Html.Raw((field.Options.ToList()[i].Text))</span>
+                                                    </label>
+                                                }
+                                            }
+                                            </div>
+                                        }
+                                        else if (((CharField)field).OptionsAsSuggestions)
+                                        {
+                                            <div class="input-group">
+                                                @Html.TextBox(field.Name, field.Value, new { @maxlength = ((CharField)field).MaxLength, @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-caret-down"></span></button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        @foreach (SelectListItem option in field.Options) {
+                                                            if (!string.IsNullOrWhiteSpace(option.Value))
+                                                            {
+                                                                if(option.Group != null && !string.IsNullOrWhiteSpace(option.Group.Name))
+                                                                {
+                                                                    <li class="dropdown-header">@(option.Group.Name)</li>
+                                                                }
+                                                                <li><a onclick="$('#@(field.Name)').val('@(HttpUtility.JavaScriptStringEncode(option.Value))')">
+                                                                    @if(option.Value.Equals(field.Value))
+                                                                    {
+                                                                        <i class="fa fa-check"></i>
+                                                                    }
+                                                                        @(option.Text)
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div><!-- /btn-group -->
+                                            </div><!-- /input-group -->
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownList(field.Name, field.Options, new { @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                        }
+                                    }
+                                }
+                                else if (((CharField)field).Widget is SelectizeWidget)
+                                {
+                                    var widget = (SelectizeWidget)((CharField)field).Widget;
+                                    @Html.Editor(field.Name, "InputSearch",
+                                        new
+                                        {
+                                            ApiUrl = widget.ApiUrl,
+                                            Name = field.Name,
+                                            Id = field.Name,
+                                            Filters = widget.Filters,
+                                            Value = field.Value,
+                                            Label = widget.Label,
+                                            ValueField = widget.ValueField,
+                                            LabelFields = widget.LabelFields,
+                                            OrderBy = widget.OrderBy,
+                                            Placeholder = field.Placeholder,
+                                            RestrictBy = widget.RestrictBy,
+                                            SearchType = widget.SearchType,
+                                            Top = widget.Top,
+                                            Data = widget.Data,
+                                            TabIndex = ((InputField)field).TabIndex,
+                                            Disabled = field.IsReadOnly ? "disabled" : ""
+                                        }
+                                    )
+                                }
+                                else
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @maxlength = ((CharField)field).MaxLength, @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                }
+
+                                }
+                                else if (field is CharMaxField)
+                                {
+                                    @Html.TextArea(field.Name, field.Value, new { rows = ((CharMaxField)field).Rows, @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                }
+                                else if (field is DateTimeField)
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Date", @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                }
+                                else if (field is IntegerField || field is DoubleField)
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Number", @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                }
+                                else if (field is PasswordField)
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Password", @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                                }
+                                else if (field is Link)
+                                {
+                                <a href="@(((Link)field).Url)" class="@(((Link)field).LinkClass)" target="_blank">
+                                    @if(((Link)field).IconBefore != null)
+                                    {
+                                        <i class="@(((Link)field).IconBefore)"></i>
+                                    }
+                                        @(((Link)field).Text)
+                                    @if (((Link)field).IconAfter != null)
+                                    {
+                                        <i class="@(((Link)field).IconAfter)"></i>
+                                    }
+                                </a>
+                            }
+                               
+                            else if (field is ReadOnlyField)
+                            {
+                                <input type="@(((ReadOnlyField)field).InputType)" value="@(field.Value)" disabled  @(new { }.AttributesToString(field.Attributes))>
+                                <input type="hidden" name="@(field.Name)" id="@(field.Name)" value="@(field.Value)" @(new { }.AttributesToString(field.Attributes))>
+                            }
+                            else if (field is BlankCell)
+                            {
+                                <input type="text" style="visibility: hidden"/>
+                            }
+                            else
+                            {
+                                @Html.TextBox(field.Name, field.Value, new { @tabindex = ((InputField)field).TabIndex }.AdditionalAttributes(field.Attributes, field.IsReadOnly, ((InputField)field).Required))
+                            }
+
+                            @if (field.IsReadOnly)
+                            {
+                                <input type="hidden" name="@(field.Name)" id="@(field.Name)" value="@(field.Value)">
+                            }
+
+                            <label>@Html.Raw(field is InputField && (((InputField)field).Required) ? "<div class=\"required-marker\">* </div>" : "")@(field.Label)</label>
+                            <div class="clearfix">
+                                <div class="font-small font-grey pull-right">
+                                    @(field.HelpText)
+                                </div>
+                            </div>
+                            <div id="@(field.Name)-alert" class="field-alert"></div>
+                            @*Html.ValidationMessageFor(model => model.DisbursementDate, "", new { @class= "text-danger"})*@
+                        </div>
+                        }
+                    }
+                    if(!string.IsNullOrWhiteSpace(Model.SaveButtonText)) {
+                    <div class="col-sm-12 padding-top-10 padding-bottom-20">
+                        <button type="submit" class="btn btn-black" id="FormSubmitButton">
+                            @if (!string.IsNullOrWhiteSpace(Model.SaveButtonIcon))
+                            {
+                                <i class="fa @(Model.SaveButtonIcon)"></i>
+                            }
+                            @(Model.SaveButtonText)
+                        </button>
+                    </div>
+                    }
+                    <!--Only display for default layout-->
+                    if (ViewBag.Layout == null)
+                    {
+                    <div class="col-sm-12 font-grey font-small">
+                        @if (Model.ModifiedBy != null)
+                        {
+                            @:Modified By: @Model.ModifiedBy.FullName on @Model.Modified.ToString("ddd, MMM dd, yyyy") @@ @Model.Modified.ToShortTimeString()
+                           }
+                    </div>
+                    <div class="col-sm-12 font-grey font-small">
+                        @if (Model.CreatedBy != null)
+                        {
+                            @:Created By: @Model.CreatedBy.FullName on @Model.Created.ToString("ddd, MMM dd, yyyy") @@ @Model.Created.ToShortTimeString()
+                        }
+                    </div>
+                        }
+                    }
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}

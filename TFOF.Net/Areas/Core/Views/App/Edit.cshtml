@@ -1,0 +1,58 @@
+﻿@using System.Linq
+@model TFOF.Areas.Core.Models.AppModel
+@{
+    Layout = ViewBag.Layout != null ? ViewBag.Layout : "~/Views/Shared/_EditLayout.cshtml";
+}
+
+@section moremenu {
+    <li>
+        <a href="@Url.Action("CreateArea","App", new { id = Model.Id })"><i class="fa fa-code"></i> Create Area</a>
+    </li>
+}
+<div class="form-horizontal padding-bottom-100">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            @Html.Display("Form", "FormEdit")
+        </div>
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <div class="mod-header">
+                <a href="@Url.Action("Create","AppField", new { id = Model.Id  })" class="text pull-right"><i class="fa fa-plus"></i></a>
+                Fields
+            </div>
+            <table class="table az-table condensed">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>Foreign Key To</th>
+                    <th>Searchable</th>
+                    <th>Default Value</th>
+                </tr>
+                </thead>
+                @if(Model.AppFields.Count() > 0){
+                    int i = 0;
+                    foreach(var field in Model.AppFields.OrderBy(o => o.Position))
+                    {
+                    i++;
+                    <tr>
+                        <td>@(i)</td>
+                        <td nowrap>
+                            <a href="@Url.Action("Edit","AppField", new { id = field.Id })">@(field.Name)
+                            @(field.ColumnName != null ? "[" + field.ColumnName + "]" : "")
+                            </a>
+                        </td>
+                        <td>@(field.IsPrimaryKey)</td>
+                        <td>@(field.DataType) @(field.StringLength)</td>
+                        <td>@(field.ForeignKeyTo != null ? "..." + field.ForeignKeyTo.Split('.').Last() : "")</td>
+                        <td>@(field.IsSearchable)</td>
+                        <td>@(field.DefaultValue)</td>
+                    </tr>
+                    }
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

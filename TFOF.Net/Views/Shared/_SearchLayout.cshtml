@@ -1,0 +1,98 @@
+﻿@using System.Configuration
+@using TFOF.Areas.Customer.Models
+
+@{
+    string searchUrl = Url.HttpRouteUrl("CustomerAPI", new
+    {
+        httproute = "",
+        controller = "CustomerSearch"
+    });
+}
+
+<div ng-controller="BasicController" ng-init="init('SearchController'); initFilter('globalsearch','@(searchUrl)', 30, false); addFilter('SearchTerm',[], 'String', 'equals', 'Or', 'text', false); searchedFor = filters.filters.SearchTerm.values[0];" ng-cloak>
+    <div class="modal search-modal" id="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <table style="width: 100%">
+                    <tr>
+                        <td style="width: 30px">
+                            <i class="fa fa-spinner fa-spin font-grey font-19"  ng-show="loading" ></i> 
+                            <i class="fa fa-search font-grey font-20"  ng-hide="loading" ></i>
+                        </td>
+                        <td><input id="SearchField" class="search-field large" type="search" placeholder="Search customers..." ng-enter="basics=[]; find(); removeFilter('SearchTerm',true)" ng-model="filters.filters.SearchTerm.values[0]">
+                        </td>
+                    </tr>
+                    </table>
+                   
+                </div>
+                <div ng-class="{ 'scrollable max-height-300': basics.length > 0 }">
+                    <div class="modal-body font-20 font-grey text-center" ng-show="basics.length == 0 && filters.didSearch && !loading">
+                        Could not find '{{ searchedFor }}'. Pleas try again.
+                        <br>
+                    </div>
+                    
+                    <div ng-repeat="a in basics track by $index" class="modal-body modal-body-hover">
+                        <div>
+                            <span class="pull-right">
+                                {{ a.CustomerNumber }}
+                            </span>
+                            <span class="font-grey font-small font-uppercase">
+                                {{ a.CustomerType | translate : {"C":"Commercial", "R": "Residential"} }} Customer
+
+                            </span>
+                            
+                            <div class="font-20">
+                                <span class="pull-right font-14">
+                                    {{ a.Status }}
+                                </span>
+                                {{ a.CompanyName }}  {{ a.FirstName }} {{ a.MI }} {{ a.LastName }}
+                            </div>
+
+                            <div>
+                                <span class="pull-right">
+                                    {{ a.Phone }}
+                                </span>
+                                {{ a.BillingAddress}} {{ a.BillingApt }} {{ a.BillingCity }} {{ a.BillingState }} {{ a.BillingZipCode }}
+                            </div>
+                        </div>
+                        <div class="btn-toolbar">
+                            <a class="btn btn-sm btn-default" href="@(ViewBag.Csw1Url)Customerservice/accountingInfo.aspx?CustomerID={{ a.CustomerNumber }}" target="_blank">
+                                View Customer <i class="fa fa-external-link"></i>
+                            </a>
+
+                            
+                            @*<a class="btn btn-sm btn-default" href="@Url.Action("Create","BankruptcyNotice", new { area = "Bankruptcy", id = "" })/{{ a.CustomerNumber }}" target="_blank">
+                                <i class="fa fa-plus"></i> Bankruptcy Notice 
+                            </a>*@
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right" ng-show="filters.nextSet">
+                        <a ng-click="previous()" class="btn btn-sm btn-borderless" ng-disabled="filters.offset==0">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                        <a ng-click="next()" class="btn btn-sm btn-borderless" ng-show="filters.nextSet">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                        <a class="btn btn-sm btn-borderless disabled" ng-hide="filters.nextSet">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div class="font-small font-grey text-left">
+                        Search by customer name, number (with or without 'C'), address or invoice number. <a onClick="$('#SearchExamples').toggleClass('hide')">Examples <i class="fa fa-angle-down"></i></a>
+                        <div id="SearchExamples" class="hide">
+                            <div><b>Name:</b> John Smith or John C Smith</div>
+                            <div><b>Customer Number:</b> C144077 or 144077</div>
+                            <div><b>Invoice Number:</b> IN07818020</div>
+                            <div><b>Billing Address:</b> 3727 Monroe</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

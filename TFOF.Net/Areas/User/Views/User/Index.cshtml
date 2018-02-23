@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Users";
+    ViewBag.LinkNew = @Url.Action("Create", "User");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+    <div class="table-wrapper">
+        <table class="table az-table condensed">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <!-- <th>Avatar</th> -->
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Last Login</th>
+                    <th>Time Zone</th>
+                    <th>Email Address</th>
+                </tr>
+            </thead>
+            <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+                <td nowrap>
+                    <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Details", "User")/{{a.Id}}">
+                        <img src="@(Url.Action("Image", "Avatar", new { area = "Account" }))/{{a.Id}}" class="circle" />
+                        {{ a.FullName }}
+                    </a>
+                </td>
+                <td>
+                    {{ a.Title }}
+                </td>
+                <td>{{ a.LastLogin | date : 'short' }}</td>
+                <td>{{ a.TimeZone}}</td>
+                <td>{{ a.Email }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

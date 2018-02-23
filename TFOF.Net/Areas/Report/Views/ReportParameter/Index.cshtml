@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Report Types";
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+    <div class="table-wrapper">
+    <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Class
+                </th>
+                <th align="center">
+                    Needs Unique Serial
+                </th>
+                <th align="center">    
+                    Is Package
+                </th>
+                <th align="center">
+                    Is Third Party
+                </th>
+            </tr>
+        </thead>
+        <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }"  ng-click="selectRow($index);">
+            <td nowrap>
+                <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+            </td>
+            <td>
+                <a href="@Url.Action("Details","Report")/{{ a.Type }}">{{ a.Type }}</a>
+            </td> 
+            <td>
+                {{ a.Class | translate : filters.translations["Class"] }}
+            </td>
+            <td align="center" ng-bind-html="a.NeedsUniqueSerial | check">
+            </td> 
+            <td align="center" ng-bind-html="a.IsPackage | check">
+            </td>
+            <td align="center" ng-bind-html="a.IsThirdParty | check">
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>

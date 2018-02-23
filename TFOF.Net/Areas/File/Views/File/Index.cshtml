@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Files";
+    ViewBag.LinkNew = Url.Action("Create", "File");
+    Layout = "~/Views/Shared/_IndexLayout.cshtml";
+}
+
+<div ng-controller="BasicController" ng-cloak>
+    @Html.Display("SearchForm", "FormSearch")
+
+    <div class="table-wrapper">
+        <table class="table table-hover az-table condensed" ng-show="filters.didSearch">
+            <thead>
+                <tr>
+                    <th>
+                        No.
+                    </th>
+                 
+                    <th>
+                        File Name
+                    </th>
+                    <th>
+                        File Location
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                     
+                </tr>
+            </thead>
+            <tr ng-repeat="a in basics track by $index" class="ng-cloak" ng-show="basics.length > 0" ng-class="{ selected:  selectedItem == $index  }" />
+                <td nowrap>
+                    <span ng-bind="$index + filters.viewOffset + 1"></span><a name="{{ $index }}"></a>
+                </td>
+            @*<td width="1">
+
+
+        @*<a class="btn btn-xs btn-default btn-block" style="width:65px;" href="@Url.Action("ProcessFileAction", "File")/{{ a.Id }}">
+            {{ a.Action }} <i class="fa fa-external-link font-10"></i>
+        </a>
+    </td>*@
+                <td width="1">
+                    <a href="@Url.Action("ProcessFileAction", "File")/{{ a.Id }}">{{ a.FileName }}</a>
+                  
+                </td>
+                <td>
+                    
+                    {{ a.FileLocation }}  
+                </td>
+            <td>
+                {{ a.Action }}
+            </td>
+                <td>
+                    {{ a.Status }}
+                </td>
+                
+            </tr>
+        </table>
+    </div>
+</div>

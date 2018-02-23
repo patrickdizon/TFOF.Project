@@ -1,0 +1,164 @@
+﻿@using System.Linq
+@using TFOF.Areas.Report.Models
+@model TFOF.Areas.Report.Models.ReportModel
+@{
+	Layout = ViewBag.Layout != null ? ViewBag.Layout : "~/Views/Shared/_EditLayout.cshtml";
+}
+@section menu {
+
+    <a class="btn btn-sm btn-default" href="@Url.Action("Viewer","Report", new { area = "Report", id = Model.Id })" target="Report-@(Model.Id)" >
+        View <i class="fa fa-external-link"></i>
+    </a>
+
+    <a class="btn btn-sm btn-default" modal="{ id: '#RunModal', url: '@Url.Action("Run", "Report", new { id = Model.Id })', background: false}">
+        <i class="fa fa-play"></i> Run 
+    </a>
+}
+
+<div class="form-horizontal padding-bottom-100">
+	<div class="row">
+		<div class="col-sm-12 col-md-6 col-lg-6">
+			@Html.Display("Form", "FormEdit")
+		</div>
+		<div class="col-sm-12 col-md-6 col-lg-6">
+			<div class="mod-header">
+				<a href="@Url.Action("Create","ReportParameter", new { id = Model.Id  })" class="text pull-right"><i class="fa fa-plus"></i></a>
+				Parameters
+			</div>
+			<table class="table az-table framed condensed">
+				<thead>
+					<tr>
+						<th width="1">#</th>
+						<th>Name</th>
+                        <th>Label</th>
+                        <th>Data Type</th>
+						<th>Default Value</th>
+					</tr>
+				</thead>
+				@if (Model.ReportParameters.Count() > 0)
+				{
+					int i = 0;
+					foreach (var field in Model.ReportParameters.OrderBy(o => o.Name))
+					{
+						i++;
+						<tr>
+							<td>@(i)</td>
+							<td nowrap>
+								<a href="@Url.Action("Edit","ReportParameter", new { id = field.Id })">
+									@(field.Name)
+								
+							</a>
+						</td>
+						<td>@(field.Label)</td>
+                        <td>@(field.DataType)</td>
+						<td>@(field.DefaultValue)</td>
+					</tr>
+					}
+				}
+
+			</table>
+            <div class="mod-header">
+                <a href="@Url.Action("Create","ReportRole", new { id = Model.Id  })" class="text pull-right"><i class="fa fa-plus"></i></a>
+                Roles
+            </div>
+            <table class="table az-table framed condensed">
+                <thead>
+                    <tr>
+                        <th width="1">#</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                @if (Model.ReportUsers.Count() > 0)
+                {
+                    int i = 0;
+                    foreach (var reportRole in Model.ReportRoles.Where(w => w.Role != null).OrderBy(o => o.Role.Name))
+                    {
+                        i++;
+                        <tr>
+                            <td>@(i)</td>
+                            <td nowrap>
+                                <a href="@Url.Action("Edit","ReportRole", new { id = reportRole.Id })">
+                                    @(reportRole.Role.Name)
+                                </a>
+
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </table>
+            <div class="mod-header">
+                <a href="@Url.Action("Create","ReportUser", new { id = Model.Id  })" class="text pull-right"><i class="fa fa-plus"></i></a>
+                Users
+            </div>
+            <table class="table az-table framed condensed">
+                <thead>
+                    <tr>
+                        <th width="1">#</th>
+                        <th>User</th>
+                        <td>Email</td>
+                        <th align="center">Send Emails</th>
+                        <th align="center">Send Notifications</th>
+                    </tr>
+                </thead>
+                @if (Model.ReportUsers.Count() > 0)
+                {
+                    int i = 0;
+                    foreach (var reportUser in Model.ReportUsers.Where(w => w.User != null).OrderBy(o => o.User.FirstName).OrderBy(o => o.User.LastName))
+                    {
+                        i++;
+                        <tr>
+                            <td>@(i)</td>
+                            <td nowrap>
+                                <a href="@Url.Action("Edit","ReportUser", new { id = reportUser.Id })">
+                                    @(reportUser.User.FirstName)
+                                    @(reportUser.User.LastName)
+                                </a>
+                               
+                            </td>
+                            <td>@(reportUser.User.Email)</td>
+                            <td align="center" valign="middle">
+                                @Html.DisplayFor(item => reportUser.SendEmail, "Boolean")
+                               
+                            </td>
+                            <td align="center" valign="middle">
+                                @Html.DisplayFor(item => reportUser.SendNotification, "Boolean")
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </table>
+			<div class="mod-header padding-top-25">
+				Logs
+			</div>
+			<table class="table az-table framed condensed">
+				<thead>
+					<tr>
+						<th width="1">#</th>
+						<th>Date</th>
+						<th>Activity</th>
+						<th>User</th>
+					</tr>
+				</thead>
+				@if (Model.ReportUserActivityLogs.OrderByDescending( c => c.Created).Take(50).Count() > 0)
+				{
+					int i = 0;
+					foreach (var log in Model.ReportUserActivityLogs.OrderByDescending(c => c.Created).Take(50))
+					{
+						i++;
+						<tr>
+							<td>@(i)</td>
+							<td>@(log.Created)</td>
+							<td nowrap>
+								@(log.Activity)
+							</td>
+							<td>@(log.CreatedBy.FullName)</td>
+						</tr>
+					}
+				}
+
+			</table>
+		</div>
+	</div>
+</div>

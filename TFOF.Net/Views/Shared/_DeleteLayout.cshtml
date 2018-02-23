@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+
+<div class="row condensed padding-sides-15 header-affix {{ sideNav }}" data-spy="affix" data-offset-top="50">
+    <div class="col-sm-12">
+        <h3 class="light">@(ViewBag.Title)</h3>
+    </div>
+    @if(IsSectionDefined("menubar")) {
+    <div class="col-sm-12 padding-bottom-10">
+        <div class="btn-toolbar">
+        	@RenderSection("menubar", required: false)
+        </div>
+    </div>
+    }
+</div>
+<div class="row padding-sides-15">
+    <div class="col-sm-5">
+        @RenderBody()
+    </div>
+</div>
+<div class="padding-50"></div>
+@section scripts {
+    @RenderSection("scripts", required: false)
+}

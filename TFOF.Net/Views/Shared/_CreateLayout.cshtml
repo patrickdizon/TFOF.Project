@@ -1,0 +1,26 @@
+﻿@using TFOF.Areas.Core.Forms
+@using TFOF.Areas.Core.Services
+@{
+    Form Model = (Form)ViewData["Form"];
+    ViewBag.Title = ((Model != null && Model.FormTitle != null) ? Model.FormTitle : (ViewBag.Title != null ? ViewBag.Title : ""));
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="padding-sides-15 padding-top-10">
+    @Html.Partial("~/Views/Shared/_BreadcrumbsLayout.cshtml")
+</div>
+<div class="navbar-static-top"> @*nav-affix" data-spy="affix" data-offset="100*@
+    <div class="row padding-sides-15">
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <h4 class="header-title">
+                @Html.Raw(ViewBag.Title)
+            </h4>
+        </div>
+    </div>
+</div>
+
+<div style="padding-right: 15px;">
+    @RenderBody()
+</div>
+@section scripts {
+    @RenderSection("scripts", required: false)
+}

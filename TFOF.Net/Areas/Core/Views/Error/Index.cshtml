@@ -1,0 +1,19 @@
+﻿@model List<string>
+@{
+    
+    ViewBag.Title = (Model != null && Model.Count() > 0) ? "Role Required" : "Oops...";
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+<div class="padding-20">
+    @if (Model != null && Model.Count() > 0)
+    {
+        <h1>Role Required</h1>
+        <h3>The page you are accessing requires the following roles: @(string.Join(",", Model)).</h3>
+        <h3>Please request access through your manager.</h3>
+    }
+    else
+    {
+        <h1>Oops...</h1>
+        <h3>The page you are looking for is not available.</h3>
+    }
+</div>

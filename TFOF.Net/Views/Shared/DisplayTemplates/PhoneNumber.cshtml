@@ -1,0 +1,11 @@
+@using System.Text.RegularExpressions
+@model string
+@{
+    var output = "";
+    if (Model != null)
+    {
+        output = Regex.Replace(Model, @"(\d{3})(\d{3})(\d{4})", "($1) $2-$3");
+    }
+}
+
+@(output)

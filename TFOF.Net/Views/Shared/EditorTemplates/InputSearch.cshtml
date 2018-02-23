@@ -1,0 +1,39 @@
+@*
+ Author: Patrick Dizon
+Date: 7/14/2016
+The Input Search is a combination of search and input field.
+
+parameters
+
+ng-selectized = api endpoint and directive name
+filters = property to search in, in comma separated values
+
+
+*@
+
+<select ng-selectized = '@(ViewData["ApiUrl"])' 
+    filters = '@(ViewData["Filters"])'
+    name = '@(ViewData["Name"])'
+    id = '@(ViewData["Id"])'
+    class = 'selectized @((string)ViewData["ApiUrl"] != "" ? "api-enabled" : "")'
+    order-by = '@(ViewData["OrderBy"])'
+    placeholder = '@(ViewData["Placeholder"])'
+    value-field= '@(ViewData["ValueField"])'
+    label-fields = '@(ViewData["LabelFields"])'
+    restrict-by = '@(ViewData["RestrictBy"])'
+    search-type = '@(ViewData["SearchType"])'
+    top = '@(ViewData["Top"])'
+    tabindex='@(ViewData["TabIndex"])'
+    create ='@(ViewData["Create"] == null ? "false" : "true")'
+    @(!string.IsNullOrWhiteSpace((string)ViewData["NgModel"]) ? "ng-model = "+ ViewData["NgModel"] + ""  : "")>
+    @((string)ViewData["Disabled"] == "disabled" ? "disabled" : "")>
+    
+    @if(!string.IsNullOrWhiteSpace((string)ViewData["Value"])) {
+        <option value='@(ViewData["Value"])' data-data='@(ViewData["Data"])' selected>
+            @(ViewData["Label"])
+        </option>
+    } else {
+        @* Required if no preset value to behave properly *@
+        <option></option>
+    }
+    </select>

@@ -1,0 +1,17 @@
+﻿@{
+    Layout = ViewBag.Layout != null ? ViewBag.Layout : "~/Views/Shared/_EditLayout.cshtml";
+}
+@if (ViewBag.Layout == null)
+{
+<div class="form-horizontal padding-bottom-100">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-6">
+            @Html.Display("Form", "FormEdit")
+        </div>
+    </div>
+</div>
+}
+else
+{
+    @Html.Display("Form","FormEdit")
+}

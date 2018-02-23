@@ -1,0 +1,12 @@
+@using System.Text.RegularExpressions
+@model string
+@{
+    string output = "";
+    if(Model != null) {
+        output = "<span class=\"font-small font-grey\">x:</span>" + Model;
+    }
+    
+}
+@if(output != "") {
+    @Html.Raw(output)
+}

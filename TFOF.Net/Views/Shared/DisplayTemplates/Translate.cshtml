@@ -1,0 +1,16 @@
+@model string
+@{
+    if (Model != null )
+    {
+        var translations = (IEnumerable<SelectListItem>)ViewData["Translations"];
+        var output = Model;
+        foreach( var item in translations )
+        {
+            if (item.Value == Model)
+            {
+                output = item.Text;
+            }
+        }
+        @output;
+    }
+}

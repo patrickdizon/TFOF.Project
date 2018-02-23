@@ -1,0 +1,78 @@
+﻿@using System.Collections
+@using TFOF.Areas.Core.Attributes
+@{ 
+    var nav = new TFOF.Areas.Core.Services.MainNavigation(Url, User);
+}
+<ul class="az-side-nav left {{ sideNav }}" id="side-nav" ng-cloak>
+   
+@if (Request.IsAuthenticated)
+{   
+    foreach (var item in nav.NavigationItems)
+    {
+        if(item.IsDivider) {
+            <li role="separator" class="divider"></li>
+        } else {
+            <li class="dropdown">
+                @if (item.Role == null || User.IsInRole(item.Role != null ? item.Role : "") || User.IsInRole(SiteRole.Administrators))
+                {
+                    <a href="@(item.Link)">
+                        <i class="fa @(item.Icon)"></i>
+                        <span>@(item.Label)</span>
+                    </a>
+                }
+                else
+                {
+                    <a href="#" class="disabled">
+                        <i class="fa @(item.Icon)"></i>
+                        <span>@(item.Label)</span>
+                    </a>
+
+                }
+            @if(item.SubNavigationItems != null && item.SubNavigationItems.Count() > 0) {
+                <div class="dropdown-menu container-fluid">
+                    <div class="sub-menu-title {{ sideNav }}">@(item.Label)</div>
+                    <table class="sub-menu">
+                        <tr>
+                    @foreach(int i in Enumerable.Range(1, item.Groups)) {
+                        <td>
+                            <ul style="display: block">
+                            @foreach (var subItem in item.SubNavigationItems)
+                            {
+                                if (subItem.Group == i)
+                                {
+                                    <li>
+                                        @if (subItem.Role == null || User.IsInRole(subItem.Role) || User.IsInRole(SiteRole.Administrators))
+                                        {
+                                            <a href="@(subItem.Link)" >
+                                                @(subItem.Label)
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="disabled text-nowrap">
+                                                
+                                                @(subItem.Label) <i class="fa fa-lock"></i>
+                                            </a>
+                                        }
+                                    </li> 
+                                }
+
+                            }
+                            </ul>
+                        </td>
+                    }
+                        </tr>
+                    </table>
+                </div>
+            }
+            </li>
+        }
+    }
+    <li class="expander">
+        <a href="#s" local-store="sideNav" data-local-store-toggle="collapsed">
+            <i ng-hide="sideNav == 'collapsed'" class="fa fa-angle-double-left"></i>
+            <i ng-show="sideNav == 'collapsed'" class="fa fa-angle-double-right"></i>
+        </a>
+    </li>
+ }
+ </ul>

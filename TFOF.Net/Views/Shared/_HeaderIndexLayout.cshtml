@@ -1,0 +1,28 @@
+@*
+Author Patrick Dizon
+May 7, 2016
+
+A shared title, floating create button for Index files
+
+IMPORTANT: Include this Partial outside of <form> or @BeginForm
+
+*@
+
+<table>
+  <tr>
+    <td width="10%" nowrap>
+        <h4 class="header-title">
+          @Html.Raw(ViewBag.Title) 
+        </h4>
+        @if(ViewBag.SubTitle != null) {
+          <h6 class="font-grey">@Html.Raw(ViewBag.SubTitle)</h6>
+        }
+    </td>
+    
+    @if(ViewBag.LinkNew != null) {
+    <td>
+      <a href="@(ViewBag.LinkNew)" class="btn btn-xs btn-default margin-10"><i class="fa fa-plus"></i> New</a>
+    </td>
+    }
+  </tr>
+</table>

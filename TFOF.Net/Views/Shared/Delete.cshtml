@@ -1,0 +1,22 @@
+﻿@model TFOF.Areas.Core.Models.BaseDeleteModel
+@{
+    ViewBag.Title = Model.Title;
+    Layout = ViewBag.Layout != null ? ViewBag.Layout : "~/Views/Shared/_DeleteLayout.cshtml";
+
+}
+<div>
+    <p>Are you sure you want to delete this record? This action cannot be undone.</p>
+    @if(Model.Id != null)
+    {
+        <p>Id: @(Model.Id)</p>
+    }
+</div>
+@section modalFooter {
+    <form action="@(Model.Url)" id="DeleteForm" method="post">
+        @Html.AntiForgeryToken()
+        <p class="pull-right">
+            <a onClick="$('#DeleteForm').submit()" class="btn btn-danger">Yes</a>
+            <a href="#!" class="btn btn-default" data-dismiss="modal">No</a>
+        </p>
+    </form>
+}

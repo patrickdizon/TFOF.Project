@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNet.Identity
+@using TFOF.Areas.Account.Helpers
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron padding-20 padding-bottom-30">
+    <h1>Hello @(User.Identity.GetFirstName())!</h1>
+    <h2>Welcome to TFOF</h2>
+</div>
+
+<div class="row padding-20">
+    <div class="col-md-6">
+        <h4 class="header-title">Getting started</h4>
+        <p>
+           Use the navigation on the right to go to the specific areas of the site.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4 class="header-title">New Access Control</h4>
+        <p>TFOF uses role based access control. Areas of the site will be visible and functional for specific roles.</p>
+    </div>
+</div>

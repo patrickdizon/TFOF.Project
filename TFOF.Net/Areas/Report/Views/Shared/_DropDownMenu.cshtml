@@ -1,0 +1,35 @@
+﻿@using TFOF.Areas.Report.Models
+@{ 
+    var reports = (List<ReportModel>)ViewData["Reports"];
+}
+
+<div class="btn-group dropdown" ng-controller="BasicController">
+    @if (reports != null && reports.Count() > 0)
+    {
+            <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                Reports <i class="fa fa-angle-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+                @foreach (ReportModel reportModel in reports.OrderBy(o => o.Name))
+                {
+                    if (reportModel != null)
+                    {
+
+                        <li>
+                            <a href="@Url.Action("Viewer", "Report", new { area = "Report", id = reportModel.Id })" target="Report-@(reportModel.Id)">
+                                @(reportModel.Name) <i class="fa fa-external-link"></i>
+                            </a>
+                        </li>
+
+                    }
+                }
+            </ul>
+
+    }
+    else
+    {
+        <a class="btn btn-sm btn-default disabled">
+            Reports <i class="fa fa-angle-down"></i>
+        </a>
+    }
+</div>

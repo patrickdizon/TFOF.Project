@@ -1,0 +1,145 @@
+﻿@using System.Collections
+@using TFOF.Areas.Core.Attributes
+@using Microsoft.AspNet.Identity
+@using TFOF.Areas.Account.Helpers
+@{ 
+    var nav = new TFOF.Areas.Core.Services.MainNavigation(Url, User);
+}
+
+
+
+
+@if (Request.IsAuthenticated)
+{
+<nav class="navbar navbar-default">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <i class="fa fa-bars font-16"></i>
+        </button>
+        <a href="@Url.Action("Index","Home", new {area = "Home"})" class="logo-mobile">
+            <div class="header-img"></div>
+        </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a modal="{ id: '#SearchModal'}" onClick="setTimeout(function() {
+                    $('#SearchField').focus();
+                }, 100);"><i class="fa fa-search font-16 pull-right"></i> Search</a>
+            </li>
+            <li class="dropdown phone-hide">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="fa fa-angle-down font-16 pull-right"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="@Url.Action("UpdateProfile", "Manage", new { area = "Account" })">
+                            Update Profile 
+                        </a>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { area = "Account" }, htmlAttributes: new { title = "Manage" })
+                    </li>
+                </ul>
+            </li>
+            <li class="phone-hide">
+                @using (Html.BeginForm("LogOff", "Account", new { area = "Account" }, FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                }
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
+            </li>
+
+        </ul>
+        <ul class="nav navbar-nav">
+            <li role="separator" class="divider"></li>
+            @{var i = 1;}
+            @foreach (var item in nav.NavigationItems)
+            {
+                
+                if (item.IsDivider)
+                {
+                    <li role="separator" class="divider"></li>
+                }
+                else
+                {
+                    <li class="dropdown">
+                        @if (item.Role == null || User.IsInRole(item.Role != null ? item.Role : "") || User.IsInRole(SiteRole.Administrators))
+                        {
+                            @*<a href="@(item.Link)">
+                            <i class="fa @(item.Icon)"></i>
+                            <span>@(item.Label)</span>
+                        </a>*@
+                            <a href="@(item.Link)" class="dropdown-toggle" @(string.IsNullOrWhiteSpace(item.Link) ? "data-toggle=dropdown" : "") role="button" aria-haspopup="true" aria-expanded="false">@(item.Label) <span class="fa fa-angle-down font-16 pull-right"></span></a>
+                        }
+                        else
+                        {
+                            <a href="#" class="dropdown-toggle disabled" role="button" aria-haspopup="true" aria-expanded="false">@(item.Label) <span class="fa fa-angle-down font-16 pull-right"></span></a>
+
+                            @*<a href="#" class="disabled">
+                            <i class="fa @(item.Icon)"></i>
+                            <span>@(item.Label)</span>
+                        </a>*@
+
+                        }
+                        
+
+                        @if (item.SubNavigationItems != null && item.SubNavigationItems.Count() > 0)
+                        {
+                            <ul class="dropdown-menu @*@(nav.NavigationItems.Count()) @(i == nav.NavigationItems.Count() ? "last pull-right" : "")*@">
+
+                                @foreach (var subItem in item.SubNavigationItems.OrderBy(o => o.Label))
+                                {
+                                    <li>
+                                        @if (subItem.Role == null || User.IsInRole(subItem.Role) || User.IsInRole(SiteRole.Administrators))
+                                        {
+                                            <a href="@(subItem.Link)">
+                                                @(subItem.Label)
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="disabled text-nowrap">
+                                                @(subItem.Label) <i class="fa fa-lock"></i>
+                                            </a>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+                i++;
+
+            }
+        </ul>
+        <ul class="nav navbar-nav navbar-right phone-show">
+            <li role="separator" class="divider"></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="fa fa-angle-down font-16 pull-right"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="@Url.Action("UpdateProfile", "Manage", new { area = "Account" })">
+                            Update Profile
+                        </a>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Change Password", "ChangePassword", "Manage", new { area = "Account" }, htmlAttributes: new { title = "Manage" })
+                    </li>
+                </ul>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+                @using (Html.BeginForm("LogOff", "Account", new { area = "Account" }, FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                }
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
+            </li>
+               
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+}

@@ -1,0 +1,43 @@
+﻿@using TFOF.Areas.Core.Forms
+@using TFOF.Areas.Core.Services
+@{
+    Form Model = (Form)ViewData["Form"];
+    ViewBag.Title = ((Model != null && Model.FormTitle != null) ? Model.FormTitle : (ViewBag.Title != null ? ViewBag.Title : ""));
+    ViewBag.ModalSize = (ViewBag.ModalSize != null ? ViewBag.ModalSize : "");
+    ViewBag.Delete = ((Model != null && Model.Delete != null) ? Model.Delete : (ViewBag.Delete != null ? ViewBag.Delete : null));
+
+}
+<div class="modal" id="{id}">
+    <div class="modal-dialog @(ViewBag.ModalSize)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="@(ViewBag.ModalSize == "modal-sm" ? "font-18": "")">@(ViewBag.Title)</h4>
+            </div>
+            <div class="modal-body {classnames}">
+                @RenderBody()
+            </div>
+            <div class="modal-footer">
+                @if (IsSectionDefined("modalFooter"))
+                { 
+                    @RenderSection("modalFooter", required: false)
+                 
+                }
+               
+                @if (ViewBag.Delete != null && ViewBag.Delete.Allowed)
+                {
+                    <i class="fa fa-trash-o font-25" id="ModalDeleteIcon" onclick="$('#ModalDeleteForm').toggleClass('hide'); $('#ModalDeleteIcon').toggleClass('hide');"></i>
+                <form action="@(ViewBag.Delete.Url)" id="ModalDeleteForm" method="post" class="hide">
+                    @Html.AntiForgeryToken()
+                    Are you sure?
+                        <a onClick="$('#ModalDeleteForm').submit()" class="btn btn-danger">Yes</a>
+                        <a href="#!" class="btn btn-default" onclick="$('#ModalDeleteForm').toggleClass('hide'); $('#ModalDeleteIcon').toggleClass('hide');">No</a>
+
+                    
+                </form>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

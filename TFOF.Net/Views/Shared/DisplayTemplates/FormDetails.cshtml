@@ -1,0 +1,155 @@
+﻿@*
+ Author: Patrick Dizon
+Date: 8/2/2016
+This template is used to create a quick form based on Core Forms.
+
+*@
+@using System.Web.Mvc;
+@using TFOF.Areas.Core.Forms;
+@model TFOF.Areas.Core.Forms.Form
+
+@{
+    var guid = "EditForm" + ViewData["Id"];
+    var classname = ViewData["class"];
+    ViewData.TemplateInfo.HtmlFieldPrefix = "";
+
+}
+        
+<div id="@(guid)" class="@(classname != null ? classname : "")">
+    @if(Model != null)
+    {
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div ng-cloak>
+                @if (Model.Fields != null)
+                {
+                    foreach (var field in Model.Fields)
+                    {   
+                        if(field is GroupLabel) 
+                        {
+
+                        <div class="input-field col-sm-12 clearfix">
+                            <div class="mod-header">
+                                <span class="text">@(field.Label)</span>
+                            </div>
+                        </div>
+                        }
+                        else if(field is HiddenField || field is IdField) 
+                        {
+                            if(field.Value != null ) 
+                            {
+                                <input type="hidden" name="@(field.Name)" id="@(field.Name)" value="@(field.Value)">
+                            }
+                        } 
+                        else if (field is BooleanField) 
+                        {
+                            <div class="input-field checkbox col-sm-12 @(field.ClassNames)">
+                                <label> @Html.CheckBox(field.Name, string.Equals(field.Value, "True"), new { @disabled = true } ) 
+                            @(field.Label)</label>
+                            </div>
+                        } 
+                        else 
+                        {
+                            <div class="input-field col-sm-12 @(field.ClassNames)">
+                                @if (field is CharField)
+                                {
+                                    if (field.Options != null && field.Options.Count() > 0)
+                                    {
+                                        if (((CharField)field).Widget is SelectizeWidget)
+                                        {
+                                            @Html.DropDownList(field.Name, field.Options, new { @ng_selectized = "", @disabled = true  })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownList(field.Name, field.Options, new { @disabled = true } )
+                                        }
+                                    }
+                                    else if (((CharField)field).Widget is SelectizeWidget)
+                                    {
+                                        @*var widget = (SelectizeWidget)((CharField)field).Widget;
+                                        <select disabled=True>
+                                            <option value="@(field.Value)">@(field.Value)</option>
+                                        </select>*@
+                                        var widget = (SelectizeWidget)((CharField)field).Widget;
+                                        @Html.Editor(field.Name, "InputSearch",
+                                            new
+                                            {
+                                                ApiUrl = widget.ApiUrl,
+                                                Name = field.Name,
+                                                Id = field.Name,
+                                                Filters = widget.Filters,
+                                                Value = field.Value,
+                                                Label = widget.Label,
+                                                ValueField = widget.ValueField,
+                                                LabelFields = widget.LabelFields,
+                                                OrderBy = widget.OrderBy,
+                                                Placeholder = "",
+                                                SearchType = widget.SearchType,
+                                                Top = widget.Top,
+                                                Data = widget.Data,
+                                                TabIndex = ((InputField)field).TabIndex,
+                                                Disabled = "disabled"
+                                            })
+
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBox(field.Name, field.Value, new { @disabled = true })
+                                    }
+                                }
+                                else if (field is CharMaxField)
+                                {
+                                    @Html.TextArea(field.Name, field.Value, new { rows = ((CharMaxField)field).Rows,  @disabled = true  })
+                                }
+                                else if (field is DateTimeField) 
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Date", @disabled = true })
+                                }
+                                else if (field is IntegerField) 
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Number", @disabled = true })
+                                }
+                                else if (field is PasswordField) 
+                                {
+                                    @Html.TextBox(field.Name, field.Value, new { @type = "Password", @disabled = true })
+                                }
+                                else if (field is BlankCell)
+                                {
+                                    <input type="text" style="visibility: hidden" />
+                                }
+                                else
+                                {
+                                    <input type="text" value="@(field.Value)" disabled=True>
+                                }
+                                <label>@(field.Label)</label>
+                                <div class="clearfix">
+                                    <div class="font-small font-grey pull-right">
+                                        @(field.HelpText)
+                                    </div>
+                                </div>
+                                @*Html.ValidationMessageFor(model => model.DisbursementDate, "", new { @class= "text-danger"})*@
+                            </div>
+                        }
+                    }
+                   
+                    <div class="col-sm-12 font-grey font-small">
+                        @if (Model.ModifiedBy != null)
+                        {
+                            @:Modified By: @Model.ModifiedBy.FullName on @Model.Modified.ToLongDateString() @@ @Model.Modified.ToLongTimeString()
+                           }
+                    </div>
+                    <div class="col-sm-12 font-grey font-small">
+                        @if (Model.CreatedBy != null)
+                        {
+                            @:Created By: @Model.CreatedBy.FullName on @Model.Created.ToLongDateString() @@ @Model.Created.ToLongTimeString()
+                        }
+                    </div>
+                    
+                }
+            </div>
+        </div>
+    </div>
+    
+    }
+</div>

@@ -1,0 +1,101 @@
+﻿@using TFOF.Areas.User.Models
+@using TFOF.Areas.Core.Helpers
+@model UserModel
+@{
+    ViewBag.Title = Model.FullName;
+    
+    Layout = "~/Views/Shared/_DetailsLayout.cshtml";
+}
+
+@section menu { 
+    <a class="btn btn-sm btn-default" href="@Url.Action("Create", "User")">
+        <i class="fa fa-plus"></i> New
+    </a>
+
+    <a class="btn btn-sm btn-default" href="@Url.Action("Edit", "User", new { Id = Model.Id })">
+        <i class="fa fa-pencil"></i> Edit
+    </a>
+        
+    <a class="btn btn-sm btn-default" modal="{id: '#PasswordReset'}">
+        Reset Password
+    </a>
+   
+}
+<div class="title-section">
+
+    <div class="row condensed">
+        <div class="col-sm-12">
+            @if (!string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img src="data:image/png;base64,@Model.Avatar" class="circle md"/>
+            }
+        </div>
+        
+    </div>
+    
+    <div class="row condensed">
+        <div class="col-sm-3">
+            <div class="label padding-top-10 font-uppercase">Title</div>
+            <div>
+                @Html.DisplayFor(model => model.Title)
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="label padding-top-10 font-uppercase">Email</div>
+            <div>
+                @Html.DisplayFor(model => model.Email)
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="label padding-top-10 font-uppercase">Time zone</div>
+            <div>@Html.DisplayFor(model => model.TimeZone)</div>
+        </div>
+        <div class="col-sm-3">
+            <div class="label padding-top-10 font-uppercase">Last Login</div>
+            <div>@Html.DisplayFor(model => model.LastLogin)</div>
+        </div>
+    </div>
+</div>
+<div class="padding-15" ng-controller="BasicController">
+    <div class="panel az-panel">
+        <div class="mod-header">
+            <div class="text">Roles</div>
+        </div>
+        <div class="row">
+            @foreach (var column in ListHelper<SelectListItem>.Group((List<SelectListItem>)((MultiSelectList)ViewData["AvailableRoles"]).Items, 3))
+            {
+                <div class="col-sm-4">
+                    @foreach (SelectListItem role in column)// ((MultiSelectList)ViewData["AvailableRoles"]))
+                    {
+                        <div>
+                            <label class="font-normal">
+                                <input type="checkbox" name="RoleId" value="@(role.Value)" @(role.Selected ? "checked" : "") ng-click="callPut('@Url.RouteUrl("UserAPI", new { httproute = "", controller = "UserRole" })/@(Model.Id)/Toggle', { RoleId: '@(role.Value)'})" />&nbsp;@(role.Text)
+                            </label>
+                        </div>
+                    }
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+<div id="PasswordReset" class="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                    <h5>Reset Password</h5>
+                    Click 'Reset Password' to send an email to the user with a password reset link.
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="@Url.Action("ResetPassword", "User", new { id = Model.Id })">
+                    Reset Password 
+                </a>
+                <a class="btn" data-dismiss="modal">
+                    Close
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

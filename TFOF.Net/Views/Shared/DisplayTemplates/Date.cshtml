@@ -1,0 +1,7 @@
+@model DateTime?
+@{
+    if (Model != null )
+    {
+     @Model.Value.ToString("MM/dd/yyyy");
+    }
+}

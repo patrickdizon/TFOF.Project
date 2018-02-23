@@ -1,0 +1,14 @@
+﻿@model TFOF.Areas.Report.Models.ReportModel
+@{
+	Layout =  "~/Views/Shared/_ModalSmallLayout.cshtml";
+}
+
+@section modalFooter{
+	<button type="button" class="btn btn-black" onClick="$('#RunForm').submit();">
+		<i class="fa fa-play font-12"></i>
+		Run
+	</button>
+}
+
+@Html.Display("Form", "FormEdit")
+

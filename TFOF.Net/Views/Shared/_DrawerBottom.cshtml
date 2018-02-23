@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.DrawerPosition = (ViewBag.DrawerPosition != null ? ViewBag.DrawerPosition : "");
+}
+<div class="drawer-bottom-padding"></div>
+<div class="drawer drawer-bottom side-nav-{{ sideNav }}" id="{id}">
+    <div class="padding-sides-15">
+        <a class="drawer-handle" local-store="drawerBottom" onclick="$('.drawer-bottom').removeClass('show')" aria-label="Close"><i class="fa fa-caret-down"></i></a>
+        @RenderBody()
+    </div>
+</div>
